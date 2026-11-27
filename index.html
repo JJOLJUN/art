@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f7fc">
   <title>모아 — 함께 그리는 아트 커뮤니티</title>
+  <meta name="description" content="작은 스케치부터 멋진 협업까지, 모아에서 새로운 창작 친구를 만나고 작품을 함께 나눠보세요.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="모아">
+  <meta property="og:title" content="모아 — 함께 그리는 아트 커뮤니티">
+  <meta property="og:description" content="영감은 나누고, 작품은 함께 만들어요. 모아에서 창작 친구들과 이야기와 작품을 나눠보세요.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&amp;fit=crop&amp;w=1200&amp;h=630&amp;q=88">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="따뜻한 색감의 창작 작업실과 그림 도구">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="모아 — 함께 그리는 아트 커뮤니티">
+  <meta name="twitter:description" content="영감은 나누고, 작품은 함께 만들어요.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&amp;fit=crop&amp;w=1200&amp;h=630&amp;q=88">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -187,6 +200,32 @@
     .toast { position: fixed; left: 50%; bottom: 28px; z-index: 70; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: #302747; color: white; padding: 11px 16px; border-radius: 12px; font-size: 12px; box-shadow: 0 8px 25px #21163835; transition: .2s; }
     .toast.show { transform: translate(-50%, 0); opacity: 1; }
     .empty { color: var(--muted); font-size: 12px; padding: 28px; text-align: center; grid-column: 1/-1; }
+    .auth-screen { display: none; position: fixed; inset: 0; z-index: 80; padding: 22px; background: linear-gradient(135deg, #f8f7fc, #eee9ff); align-items: center; justify-content: center; }
+    body.auth-required .auth-screen { display: flex; }
+    body.auth-required .app, body.auth-required .mobile-nav { display: none; }
+    .auth-card { width: min(100%, 430px); padding: 30px; border: 1px solid var(--line); border-radius: 24px; background: white; box-shadow: 0 25px 80px #30204b1c; }
+    .auth-brand { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 800; }
+    .auth-card h1 { margin: 24px 0 7px; font-size: 23px; }
+    .auth-card > p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .auth-switch { border: 0; padding: 0; background: transparent; color: var(--purple); font-weight: 700; }
+    .local-notice { margin-top: 15px !important; padding: 11px; border-radius: 10px; background: #f7f5fb; font-size: 10px !important; }
+    .account-button { padding: 0; border: 0; border-radius: 50%; background: transparent; }
+    .room-tools { display: flex; gap: 9px; margin-bottom: 13px; }
+    .room-tools input { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 11px; padding: 0 11px; }
+    .room-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .room-card { padding: 15px; border: 1px solid var(--line); border-radius: 15px; background: white; }
+    .room-card h3 { margin: 0 0 6px; font-size: 13px; }
+    .room-card p { margin: 0 0 11px; min-height: 32px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .room-card-foot { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+    .room-card-foot .room-code { flex: 1; color: #777181; font-size: 9px; }
+    .room-action { padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px; background: #f8f6fc; color: #6d4bd7; font-size: 10px; font-weight: 700; }
+    .room-settings { padding: 12px; border-radius: 12px; background: #f8f6fc; color: #706a7b; font-size: 10px; line-height: 1.7; }
+    @media (max-width: 700px) {
+      .auth-card { padding: 23px; }
+      .room-tools { flex-direction: column; }
+      .room-tools input { height: 39px; }
+      .room-list { grid-template-columns: 1fr; }
+    }
     @media (max-width: 1160px) {
       .layout { grid-template-columns: 190px minmax(0, 1fr); padding: 24px; gap: 21px; }
       .right-rail { display: none; }
@@ -202,6 +241,7 @@
       .top-actions { gap: 7px; margin-left: 0; }
       .top-actions .icon-button { width: 35px; height: 35px; border: 0; background: transparent; }
       .top-actions .avatar { display: none; }
+      .top-actions .account-button .avatar { display: block; width: 34px; height: 34px; }
       .layout { display: block; padding: 16px 14px 88px; }
       .left-rail, .right-rail { display: none; }
       .hero { min-height: 227px; padding: 23px 20px; border-radius: 20px; }
@@ -255,7 +295,20 @@
     }
   </style>
 </head>
-<body>
+<body class="auth-required">
+  <section class="auth-screen" id="authScreen" aria-label="로그인">
+    <form class="auth-card" id="authForm">
+      <div class="auth-brand"><span class="brand-mark">✳</span> 모아</div>
+      <h1 id="authTitle">내 프로필로 시작하기</h1>
+      <p id="authDescription">계정을 만들거나 로그인해 나만의 창작 공간을 이어가세요.</p>
+      <label class="field" id="displayNameField"><span>프로필 이름</span><input name="displayName" maxlength="30" autocomplete="name" placeholder="예: 서윤 작가"></label>
+      <label class="field"><span>아이디</span><input name="username" required minlength="3" maxlength="24" autocomplete="username" placeholder="영문, 숫자, 밑줄"></label>
+      <label class="field"><span>비밀번호</span><input name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="8자 이상"></label>
+      <p class="local-notice">현재 버전은 이 브라우저에만 계정과 데이터가 저장되는 프로토타입입니다. 실제 서버 인증이나 다른 기기와의 동기화는 제공하지 않습니다.</p>
+      <button class="button gradient modal-submit" id="authSubmit" type="submit">계정 만들기</button>
+      <p style="text-align:center;margin-top:16px"><span id="authSwitchText">이미 계정이 있나요?</span> <button class="auth-switch" id="authSwitch" type="button">로그인</button></p>
+    </form>
+  </section>
   <div class="app">
     <header class="topbar">
       <a class="brand" href="#home" aria-label="모아 홈">
@@ -268,7 +321,7 @@
       <div class="top-actions">
         <button class="icon-button" id="messagesButton" aria-label="메시지"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 8.7 3.9a8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"></path></svg></button>
         <button class="icon-button" id="noticeButton" aria-label="알림"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><i class="notification-dot"></i></button>
-        <img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="프로필">
+        <button class="account-button" id="accountButton" aria-label="프로필 및 설정"><img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="프로필"></button>
       </div>
     </header>
 
@@ -278,6 +331,7 @@
         <nav aria-label="주 메뉴">
           <a class="nav-link active" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"></path></svg>홈</a>
           <a class="nav-link" href="#community"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>커뮤니티<span class="nav-count">12</span></a>
+          <a class="nav-link" href="#privateRooms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="10" width="18" height="11" rx="2"></rect><path d="M7 10V7a5 5 0 0 1 10 0v3m-5 4v3"></path></svg>프라이빗룸</a>
           <a class="nav-link" href="#feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg>아트 피드</a>
           <a class="nav-link" href="#collab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 10-8 10Z"></path><path d="M8 12h8M12 8v8"></path></svg>협업 프로젝트<span class="nav-count">3</span></a>
           <a class="nav-link" href="#challenges"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 21h8m-4-4v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0z"></path><path d="M7 6H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4"></path></svg>오늘의 챌린지</a>
@@ -334,6 +388,19 @@
             <article class="community-tile"><span class="community-icon" style="background:#edf4ff">🪄</span><h3>캐릭터 디자인 연구소</h3><p>캐릭터 설정부터 표정 연습까지 함께해요.</p><div class="community-foot"><span><i class="live-dot"></i>18명 활동 중</span><button class="community-join" data-community="캐릭터 디자인 연구소">참여</button></div></article>
             <article class="community-tile"><span class="community-icon" style="background:#fff3e8">🌄</span><h3>느긋한 풍경 스케치</h3><p>좋아하는 풍경을 그리고 작업 과정을 나눠요.</p><div class="community-foot"><span><i class="live-dot"></i>9명 활동 중</span><button class="community-join" data-community="느긋한 풍경 스케치">참여</button></div></article>
           </div>
+        </section>
+
+        <section class="section" id="privateRooms">
+          <div class="section-heading">
+            <span class="heading-icon">🔒</span><div><h2>나만의 프라이빗룸</h2><p>초대 코드로 원하는 사람들과 작은 방을 만들어보세요</p></div>
+            <button class="more" id="createRoomButton" style="border:0;background:none;cursor:pointer">＋ 방 만들기</button>
+          </div>
+          <form class="room-tools" id="roomJoinForm">
+            <input name="inviteCode" maxlength="12" required placeholder="초대 코드 입력">
+            <button class="button outline" type="submit">초대 코드로 참여</button>
+          </form>
+          <div class="room-list" id="privateRoomList"></div>
+          <p class="local-notice">프라이빗룸 대화와 초대 코드는 현재 같은 브라우저의 프로필에서만 작동합니다. 실제 비공개/실시간 통신은 서버 연동이 필요합니다.</p>
         </section>
 
         <section class="section" id="collab">
@@ -404,6 +471,7 @@
   <nav class="mobile-nav" aria-label="모바일 메뉴">
     <a class="mobile-link active" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"></path></svg>홈</a>
     <a class="mobile-link" href="#community"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path></svg>커뮤니티</a>
+    <a class="mobile-link" href="#privateRooms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="10" width="18" height="11" rx="2"></rect><path d="M7 10V7a5 5 0 0 1 10 0v3"></path></svg>프라이빗룸</a>
     <a class="mobile-link" href="#feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg>피드</a>
     <a class="mobile-link" href="#collab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 10-8 10Z"></path><path d="M8 12h8"></path></svg>협업</a>
     <a class="mobile-link" href="#profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"></circle><path d="M5 21a7 7 0 0 1 14 0"></path></svg>내 프로필</a>
@@ -441,6 +509,36 @@
       <div class="comment-list" id="chatList"></div>
       <form class="comment-form" id="chatForm"><input name="message" required maxlength="240" placeholder="함께 나눌 이야기를 입력하세요"><button class="button gradient" type="submit" style="height:38px;padding:0 12px">전송</button></form>
     </div>
+    <div class="modal-backdrop" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+      <form class="modal" id="profileForm">
+        <div class="modal-head"><h2 id="profileModalTitle">프로필 및 설정</h2><button class="close-modal" type="button" aria-label="닫기">×</button></div>
+        <label class="field"><span>프로필 이름</span><input name="displayName" required maxlength="30"></label>
+        <label class="field"><span>소개</span><textarea name="bio" maxlength="180"></textarea></label>
+        <label class="field"><span>아이디 (변경 불가)</span><input name="username" disabled></label>
+        <label class="field"><span><input name="privateProfile" type="checkbox" style="width:auto;margin-right:8px">프로필을 비공개로 표시</span></label>
+        <label class="field"><span><input name="allowInvites" type="checkbox" style="width:auto;margin-right:8px">프라이빗룸 초대 허용</span></label>
+        <button class="button gradient modal-submit" type="submit">변경사항 저장</button>
+        <button class="button outline modal-submit" id="logoutButton" type="button">로그아웃</button>
+      </form>
+    </div>
+    <div class="modal-backdrop" id="createRoomModal" role="dialog" aria-modal="true" aria-labelledby="createRoomTitle">
+      <form class="modal" id="createRoomForm">
+        <div class="modal-head"><h2 id="createRoomTitle">프라이빗룸 만들기</h2><button class="close-modal" type="button" aria-label="닫기">×</button></div>
+        <label class="field"><span>방 이름</span><input name="name" required maxlength="40" placeholder="예: 금요일 저녁 드로잉"></label>
+        <label class="field"><span>방 소개</span><textarea name="description" maxlength="160" placeholder="초대할 사람들에게 방을 소개해요"></textarea></label>
+        <p class="local-notice">방을 만든 뒤 초대 코드를 복사해 참여자에게 직접 전달하세요. 코드를 아는 사람은 이 브라우저의 계정에서 참여할 수 있습니다.</p>
+        <button class="button gradient modal-submit" type="submit">방 만들기</button>
+      </form>
+    </div>
+    <div class="modal-backdrop" id="privateRoomModal" role="dialog" aria-modal="true" aria-labelledby="privateRoomTitle">
+      <div class="modal">
+        <div class="modal-head"><div><h2 id="privateRoomTitle">프라이빗룸</h2><span id="privateRoomSubtitle" style="font-size:10px;color:#928c9b"></span></div><button class="close-modal" type="button" aria-label="닫기">×</button></div>
+        <div id="roomManageArea"></div>
+        <div class="comment-list" id="privateRoomChatList"></div>
+        <form class="comment-form" id="privateRoomChatForm"><input name="message" required maxlength="240" placeholder="방 멤버에게 메시지 보내기"><button class="button gradient" type="submit" style="height:38px;padding:0 12px">전송</button></form>
+        <button class="button outline modal-submit" id="leaveRoomButton" type="button">방 나가기</button>
+      </div>
+    </div>
   </div>
   <div class="toast" id="toast" role="status"></div>
 
@@ -455,24 +553,35 @@
       try { const value = JSON.parse(localStorage.getItem(key)); return value ?? fallback; }
       catch { return fallback; }
     };
+    const storedAccounts = readStore("moa.accounts", []);
+    const accounts = Array.isArray(storedAccounts) ? storedAccounts : [];
+    const sessionId = localStorage.getItem("moa.session");
+    let currentAccount = Array.isArray(accounts) ? accounts.find(account => account.id === sessionId) || null : null;
+    const userData = currentAccount ? readStore(`moa.user.${currentAccount.id}`, {}) : {};
     const state = {
       posts: readStore("moa.posts", artworkSeed),
-      liked: readStore("moa.liked", []),
-      saved: readStore("moa.saved", []),
-      joined: readStore("moa.joined", []),
-      projects: readStore("moa.projects", []),
-      createdProjects: readStore("moa.createdProjects", []),
-      followed: readStore("moa.followed", []),
-      challenge: readStore("moa.challenge", []),
+      liked: userData.liked || [],
+      saved: userData.saved || [],
+      joined: userData.joined || [],
+      projects: userData.projects || [],
+      createdProjects: userData.createdProjects || [],
+      followed: userData.followed || [],
+      challenge: userData.challenge || [],
+      roomIds: userData.roomIds || [],
       chats: readStore("moa.chats", {}),
       activePost: null,
       activeCommunity: null,
+      activeRoomId: null,
       sort: "popular"
     };
     const persist = () => {
       try {
-        for (const key of ["posts", "liked", "saved", "joined", "projects", "createdProjects", "followed", "challenge", "chats"]) {
-          localStorage.setItem(`moa.${key}`, JSON.stringify(state[key]));
+        localStorage.setItem("moa.posts", JSON.stringify(state.posts));
+        localStorage.setItem("moa.chats", JSON.stringify(state.chats));
+        if (currentAccount) {
+          const userState = {};
+          for (const key of ["liked", "saved", "joined", "projects", "createdProjects", "followed", "challenge", "roomIds"]) userState[key] = state[key];
+          localStorage.setItem(`moa.user.${currentAccount.id}`, JSON.stringify(userState));
         }
       } catch {
         toast("브라우저 저장 공간이 부족해요. 일부 변경 사항이 저장되지 않을 수 있어요.");
@@ -488,7 +597,11 @@
     };
     const renderPosts = () => {
       const query = document.getElementById("searchInput").value.trim().toLowerCase();
-      const posts = [...state.posts].filter(post => !query || [post.title, post.author, post.description, ...(post.tags || [])].join(" ").toLowerCase().includes(query));
+      const posts = [...state.posts].filter(post => {
+        const owner = accounts.find(account => post.handle === `@${account.username}`);
+        const visible = !owner?.privateProfile || post.handle === getHandle();
+        return visible && (!query || [post.title, post.author, post.description, ...(post.tags || [])].join(" ").toLowerCase().includes(query));
+      });
       if (state.sort === "popular") posts.sort((a, b) => b.likes - a.likes);
       else posts.sort((a, b) => a.created - b.created);
       const container = document.getElementById("postList");
@@ -508,7 +621,7 @@
           </div></article>`;
       }).join("");
       const count = document.getElementById("myArtworkCount");
-      if (count) count.textContent = 12 + state.posts.filter(post => post.handle === "@seoyun.draw").length;
+      if (count) count.textContent = 12 + state.posts.filter(post => currentAccount && post.handle === `@${currentAccount.username}`).length;
     };
     const renderCreatedProjects = () => {
       const container = document.querySelector(".projects");
@@ -525,6 +638,52 @@
         button.textContent = joined ? "참여 중 ✓" : button.dataset.project.includes("이어 그리는") ? "이어 그리기" : "함께하기";
         button.classList.toggle("joined", joined);
       });
+    };
+    const storedRooms = readStore("moa.privateRooms", []);
+    const privateRooms = Array.isArray(storedRooms) ? storedRooms : [];
+    const saveRooms = () => {
+      try { localStorage.setItem("moa.privateRooms", JSON.stringify(privateRooms)); }
+      catch { toast("저장 공간이 부족해 방 변경사항을 저장하지 못했어요."); }
+    };
+    const getHandle = () => currentAccount ? `@${currentAccount.username}` : "";
+    const renderPrivateRooms = () => {
+      const container = document.getElementById("privateRoomList");
+      const rooms = privateRooms.filter(room => state.roomIds.includes(room.id));
+      container.innerHTML = rooms.length ? rooms.map(room => `<article class="room-card" data-room="${escapeHTML(room.id)}">
+        <h3>${escapeHTML(room.name)}</h3><p>${escapeHTML(room.description || "초대된 멤버와 나누는 작은 공간")}</p>
+        <div class="room-card-foot"><span class="room-code">초대 코드 · ${escapeHTML(room.inviteCode)}</span><button class="room-action" data-room-action="open">열기</button><button class="room-action" data-room-action="copy">코드 복사</button></div>
+      </article>`).join("") : '<div class="empty">아직 참여한 프라이빗룸이 없어요. 방을 만들거나 초대 코드를 입력해 참여해보세요.</div>';
+    };
+    const renderPrivateRoom = room => {
+      state.activeRoomId = room.id;
+      document.getElementById("privateRoomTitle").textContent = room.name;
+      document.getElementById("privateRoomSubtitle").textContent = `${room.memberIds.length}명 참여 · 초대 전용`;
+      const isOwner = room.ownerId === currentAccount.id;
+      document.getElementById("roomManageArea").innerHTML = isOwner
+        ? `<form id="roomSettingsForm" class="room-settings"><strong>방 설정</strong><label class="field"><span>방 이름</span><input name="name" required maxlength="40" value="${escapeHTML(room.name)}"></label><label class="field"><span>방 소개</span><textarea name="description" maxlength="160">${escapeHTML(room.description || "")}</textarea></label><div>초대 코드: <strong>${escapeHTML(room.inviteCode)}</strong></div><div style="display:flex;gap:8px;margin-top:8px"><button class="room-action" type="submit">설정 저장</button><button class="room-action" type="button" data-room-action="regenerate">초대 코드 재발급</button><button class="room-action" type="button" data-room-action="delete">방 삭제</button></div></form>`
+        : `<div class="room-settings">방 만든 사람: ${escapeHTML(room.ownerName)} · 초대 코드: <strong>${escapeHTML(room.inviteCode)}</strong></div>`;
+      const messages = room.messages || [];
+      document.getElementById("privateRoomChatList").innerHTML = messages.length
+        ? messages.map(message => `<div class="comment"><img class="avatar" src="${escapeHTML(message.avatar || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80")}" alt=""><p><strong>${escapeHTML(message.author)}</strong>${escapeHTML(message.text)}</p></div>`).join("")
+        : '<div class="empty">아직 메시지가 없어요. 첫 인사를 남겨보세요 👋</div>';
+      document.getElementById("leaveRoomButton").textContent = isOwner ? "방 닫기" : "방 나가기";
+      modal("privateRoomModal", true);
+    };
+    const updateAccountUI = () => {
+      if (!currentAccount) return;
+      const handle = getHandle();
+      document.querySelector(".profile-mini strong").textContent = currentAccount.displayName;
+      document.querySelector(".profile-mini span").textContent = handle;
+      document.querySelector(".profile-card .profile-summary h3").innerHTML = `${escapeHTML(currentAccount.displayName)} <span style="font-size:10px;color:#8b7ac4;font-weight:500">${escapeHTML(handle)}</span>`;
+      document.querySelector(".profile-card .profile-summary p").textContent = currentAccount.bio || "그림으로 상상한 장면들을 기록하고 있어요.";
+      document.getElementById("profileForm").elements.displayName.value = currentAccount.displayName;
+      document.getElementById("profileForm").elements.username.value = currentAccount.username;
+      document.getElementById("profileForm").elements.bio.value = currentAccount.bio || "";
+      document.getElementById("profileForm").elements.privateProfile.checked = Boolean(currentAccount.privateProfile);
+      document.getElementById("profileForm").elements.allowInvites.checked = currentAccount.allowInvites !== false;
+      document.querySelector(".profile-mini .avatar").src = currentAccount.avatar;
+      document.querySelector(".profile-card > .avatar").src = currentAccount.avatar;
+      document.querySelector("#accountButton .avatar").src = currentAccount.avatar;
     };
     const modal = (id, open) => document.getElementById(id).classList.toggle("open", open);
     document.querySelectorAll('[data-modal="post"]').forEach(button => button.addEventListener("click", () => modal("postModal", true)));
@@ -564,8 +723,8 @@
       const preview = document.getElementById("uploadPreview");
       const image = preview.src && preview.style.display !== "none" ? preview.src : "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=850&q=85";
       state.posts.unshift({
-        id: `post-${Date.now()}`, author: "서윤 작가", handle: "@seoyun.draw",
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
+        id: `post-${Date.now()}`, author: currentAccount.displayName, handle: `@${currentAccount.username}`,
+        avatar: currentAccount.avatar,
         image, title: data.get("title"), description: data.get("description"),
         tags: String(data.get("tags") || "").split(/[,\s#]+/).filter(Boolean).slice(0, 5), likes: 0, comments: [], created: 0
       });
@@ -599,14 +758,14 @@
     function renderComments(post) {
       document.getElementById("commentTitle").textContent = post.title;
       const comments = post.comments || [];
-      document.getElementById("commentList").innerHTML = comments.length ? comments.map(comment => `<div class="comment"><img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt=""><p><strong>${escapeHTML(comment.author || "모아 작가")}</strong>${escapeHTML(comment.text || comment)}</p></div>`).join("") : '<div class="empty">첫 번째 응원의 말을 남겨보세요!</div>';
+      document.getElementById("commentList").innerHTML = comments.length ? comments.map(comment => `<div class="comment"><img class="avatar" src="${escapeHTML(comment.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80")}" alt=""><p><strong>${escapeHTML(comment.author || "모아 작가")}</strong>${escapeHTML(comment.text || comment)}</p></div>`).join("") : '<div class="empty">첫 번째 응원의 말을 남겨보세요!</div>';
     }
     document.getElementById("commentForm").addEventListener("submit", event => {
       event.preventDefault();
       const post = state.posts.find(item => item.id === state.activePost);
       const input = event.currentTarget.elements.comment;
       if (!post || !input.value.trim()) return;
-      post.comments = [...(post.comments || []), { author: "서윤 작가", text: input.value.trim() }];
+      post.comments = [...(post.comments || []), { author: currentAccount.displayName, avatar: currentAccount.avatar, text: input.value.trim() }];
       persist(); renderComments(post); renderPosts(); input.value = "";
       document.getElementById("commentList").scrollTop = document.getElementById("commentList").scrollHeight;
     });
@@ -625,7 +784,7 @@
       document.getElementById("chatTitle").textContent = community;
       const messages = state.chats[community] || [];
       document.getElementById("chatList").innerHTML = messages.length
-        ? messages.map(message => `<div class="comment"><img class="avatar" src="${message.author === "서윤 작가" ? "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" : "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80"}" alt=""><p><strong>${escapeHTML(message.author)}</strong>${escapeHTML(message.text)}</p></div>`).join("")
+        ? messages.map(message => `<div class="comment"><img class="avatar" src="${escapeHTML(message.avatar || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80")}" alt=""><p><strong>${escapeHTML(message.author)}</strong>${escapeHTML(message.text)}</p></div>`).join("")
         : '<div class="empty">아직 대화가 없어요. 먼저 인사해보세요 👋</div>';
     };
     const updateCommunityButtons = () => document.querySelectorAll(".community-join").forEach(button => {
@@ -658,7 +817,7 @@
       const text = input.value.trim();
       if (!state.activeCommunity || !text) return;
       const messages = state.chats[state.activeCommunity] || [];
-      state.chats[state.activeCommunity] = [...messages, { author: "서윤 작가", text }];
+      state.chats[state.activeCommunity] = [...messages, { author: currentAccount.displayName, avatar: currentAccount.avatar, text }];
       persist(); renderChat(state.activeCommunity); input.value = "";
       const list = document.getElementById("chatList");
       list.scrollTop = list.scrollHeight;
@@ -685,7 +844,123 @@
     }));
     document.getElementById("searchInput").addEventListener("input", renderPosts);
     document.getElementById("noticeButton").addEventListener("click", () => toast("새로운 알림이 없어요. 창작에 집중해볼까요?"));
-    document.getElementById("messagesButton").addEventListener("click", () => toast("메시지 기능은 데모 화면이에요."));
+    document.getElementById("messagesButton").addEventListener("click", () => document.getElementById("privateRooms").scrollIntoView({ behavior: "smooth" }));
+    document.getElementById("accountButton").addEventListener("click", () => modal("profileModal", true));
+    document.querySelector(".profile-edit").addEventListener("click", () => modal("profileModal", true));
+    document.getElementById("profileForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      currentAccount.displayName = form.elements.displayName.value.trim();
+      currentAccount.bio = form.elements.bio.value.trim();
+      currentAccount.privateProfile = form.elements.privateProfile.checked;
+      currentAccount.allowInvites = form.elements.allowInvites.checked;
+      try {
+        localStorage.setItem("moa.accounts", JSON.stringify(accounts));
+        updateAccountUI(); renderPosts(); modal("profileModal", false); toast("프로필 설정을 저장했어요.");
+      } catch { toast("저장 공간이 부족해 설정을 저장하지 못했어요."); }
+    });
+    document.getElementById("logoutButton").addEventListener("click", () => {
+      localStorage.removeItem("moa.session");
+      currentAccount = null;
+      document.querySelectorAll(".modal-backdrop.open").forEach(element => element.classList.remove("open"));
+      document.body.classList.add("auth-required");
+      setAuthMode("login");
+    });
+    document.querySelector(".portfolio-button").addEventListener("click", () => {
+      const portfolio = state.posts.filter(post => post.handle === getHandle());
+      const file = new Blob([JSON.stringify({ profile: currentAccount, artworks: portfolio }, null, 2)], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(file); link.download = `${currentAccount.username}-portfolio.json`; link.click();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000); toast("내 작품 목록을 포트폴리오 파일로 저장했어요.");
+    });
+    document.getElementById("createRoomButton").addEventListener("click", () => modal("createRoomModal", true));
+    document.getElementById("createRoomForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const random = new Uint8Array(4); crypto.getRandomValues(random);
+      const inviteCode = Array.from(random, byte => byte.toString(16).padStart(2, "0")).join("").toUpperCase();
+      const room = {
+        id: `room-${Date.now()}-${inviteCode}`, name: String(data.get("name")).trim(),
+        description: String(data.get("description")).trim(), inviteCode,
+        ownerId: currentAccount.id, ownerName: currentAccount.displayName,
+        memberIds: [currentAccount.id], messages: []
+      };
+      privateRooms.unshift(room); state.roomIds.push(room.id);
+      saveRooms(); persist(); renderPrivateRooms(); event.currentTarget.reset(); modal("createRoomModal", false);
+      toast(`방을 만들었어요. 초대 코드 ${inviteCode}를 전달하세요.`);
+    });
+    document.getElementById("roomJoinForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const code = String(new FormData(event.currentTarget).get("inviteCode")).trim().toUpperCase();
+      const room = privateRooms.find(item => item.inviteCode === code);
+      if (!room) { toast("유효한 초대 코드를 찾지 못했어요."); return; }
+      if (currentAccount.allowInvites === false && room.ownerId !== currentAccount.id) { toast("프로필 설정에서 방 초대를 허용해야 해요."); return; }
+      if (state.roomIds.includes(room.id)) { renderPrivateRoom(room); return; }
+      state.roomIds.push(room.id);
+      if (!room.memberIds.includes(currentAccount.id)) room.memberIds.push(currentAccount.id);
+      saveRooms(); persist(); renderPrivateRooms(); event.currentTarget.reset();
+      toast(`${room.name}에 참여했어요.`);
+    });
+    document.getElementById("privateRoomList").addEventListener("click", event => {
+      const button = event.target.closest("[data-room-action]");
+      if (!button) return;
+      const room = privateRooms.find(item => item.id === button.closest("[data-room]").dataset.room);
+      if (!room) return;
+      if (button.dataset.roomAction === "open") renderPrivateRoom(room);
+      if (button.dataset.roomAction === "copy") {
+        if (navigator.clipboard) navigator.clipboard.writeText(room.inviteCode).then(() => toast("초대 코드를 복사했어요.")).catch(() => toast(`초대 코드: ${room.inviteCode}`));
+        else toast(`초대 코드: ${room.inviteCode}`);
+      }
+    });
+    document.getElementById("roomManageArea").addEventListener("submit", event => {
+      if (event.target.id !== "roomSettingsForm") return;
+      event.preventDefault();
+      const room = privateRooms.find(item => item.id === state.activeRoomId);
+      if (!room || room.ownerId !== currentAccount.id) return;
+      room.name = event.target.elements.name.value.trim();
+      room.description = event.target.elements.description.value.trim();
+      saveRooms(); renderPrivateRoom(room); renderPrivateRooms(); toast("방 설정을 저장했어요.");
+    });
+    document.getElementById("roomManageArea").addEventListener("click", event => {
+      const button = event.target.closest("[data-room-action]");
+      if (!button) return;
+      const roomIndex = privateRooms.findIndex(item => item.id === state.activeRoomId);
+      const room = privateRooms[roomIndex];
+      if (!room || room.ownerId !== currentAccount.id) return;
+      if (button.dataset.roomAction === "regenerate") {
+        const random = new Uint8Array(4); crypto.getRandomValues(random);
+        room.inviteCode = Array.from(random, byte => byte.toString(16).padStart(2, "0")).join("").toUpperCase();
+        saveRooms(); renderPrivateRoom(room); renderPrivateRooms(); toast("새 초대 코드를 발급했어요.");
+      } else if (button.dataset.roomAction === "delete" && confirm("이 방과 대화 내용을 삭제할까요?")) {
+        privateRooms.splice(roomIndex, 1);
+        state.roomIds = state.roomIds.filter(id => id !== room.id);
+        saveRooms(); persist(); renderPrivateRooms(); modal("privateRoomModal", false); toast("방을 삭제했어요.");
+      }
+    });
+    document.getElementById("privateRoomChatForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const room = privateRooms.find(item => item.id === state.activeRoomId);
+      const input = event.currentTarget.elements.message;
+      const text = input.value.trim();
+      if (!room || !state.roomIds.includes(room.id) || !text) return;
+      room.messages.push({ author: currentAccount.displayName, avatar: currentAccount.avatar, text });
+      saveRooms(); renderPrivateRoom(room); input.value = "";
+      document.getElementById("privateRoomChatList").scrollTop = document.getElementById("privateRoomChatList").scrollHeight;
+    });
+    document.getElementById("leaveRoomButton").addEventListener("click", () => {
+      const roomIndex = privateRooms.findIndex(item => item.id === state.activeRoomId);
+      const room = privateRooms[roomIndex];
+      if (!room) return;
+      if (room.ownerId === currentAccount.id) {
+        if (!confirm("방을 닫으면 모든 멤버가 더 이상 접근할 수 없어요. 계속할까요?")) return;
+        privateRooms.splice(roomIndex, 1);
+      } else {
+        room.memberIds = room.memberIds.filter(id => id !== currentAccount.id);
+      }
+      state.roomIds = state.roomIds.filter(id => id !== room.id);
+      saveRooms(); persist(); renderPrivateRooms(); modal("privateRoomModal", false);
+      toast(room.ownerId === currentAccount.id ? "방을 닫았어요." : "방에서 나왔어요.");
+    });
     document.querySelector(".prompt-button").addEventListener("click", event => {
       event.currentTarget.textContent = "저장했어요 ✓"; toast("오늘의 영감을 저장했어요");
     });
@@ -696,8 +971,86 @@
     };
     window.addEventListener("hashchange", updateNavigation);
     updateNavigation();
-    renderCreatedProjects();
-    renderPosts();
+    let authMode = "signup";
+    const setAuthMode = mode => {
+      authMode = mode;
+      const creating = mode === "signup";
+      document.getElementById("authTitle").textContent = creating ? "내 프로필로 시작하기" : "다시 만나서 반가워요";
+      document.getElementById("authDescription").textContent = creating ? "계정을 만들거나 로그인해 나만의 창작 공간을 이어가세요." : "아이디와 비밀번호로 이 브라우저의 프로필에 로그인하세요.";
+      document.getElementById("authSubmit").textContent = creating ? "계정 만들기" : "로그인";
+      document.getElementById("authSwitchText").textContent = creating ? "이미 계정이 있나요?" : "처음 오셨나요?";
+      document.getElementById("authSwitch").textContent = creating ? "로그인" : "계정 만들기";
+      document.getElementById("displayNameField").hidden = !creating;
+      document.getElementById("authForm").elements.password.autocomplete = creating ? "new-password" : "current-password";
+    };
+    const hexBytes = value => new Uint8Array(value.match(/.{2}/g).map(pair => parseInt(pair, 16)));
+    const hashPassword = async (password, salt) => {
+      const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+      const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: hexBytes(salt), iterations: 120000, hash: "SHA-256" }, key, 256);
+      return Array.from(new Uint8Array(bits), byte => byte.toString(16).padStart(2, "0")).join("");
+    };
+    const loadUserState = () => {
+      const saved = readStore(`moa.user.${currentAccount.id}`, {});
+      for (const key of ["liked", "saved", "joined", "projects", "createdProjects", "followed", "challenge", "roomIds"]) {
+        state[key] = Array.isArray(saved[key]) ? saved[key] : [];
+      }
+      updateAccountUI();
+      renderCreatedProjects(); renderPosts(); renderPrivateRooms(); updateCommunityButtons();
+      document.querySelectorAll(".follow").forEach(button => {
+        const artist = button.closest(".artist").querySelector("strong").textContent;
+        const following = state.followed.includes(artist);
+        button.textContent = following ? "팔로잉" : "팔로우";
+        button.classList.toggle("following", following);
+      });
+    };
+    const enterApp = () => {
+      document.body.classList.remove("auth-required");
+      loadUserState();
+    };
+    document.getElementById("authSwitch").addEventListener("click", () => {
+      setAuthMode(authMode === "signup" ? "login" : "signup");
+      document.getElementById("authDescription").textContent = authMode === "signup"
+        ? "계정을 만들거나 로그인해 나만의 창작 공간을 이어가세요."
+        : "아이디와 비밀번호로 이 브라우저의 프로필에 로그인하세요.";
+    });
+    document.getElementById("authForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const username = form.elements.username.value.trim();
+      const password = form.elements.password.value;
+      const description = document.getElementById("authDescription");
+      try {
+        if (!crypto.subtle) throw new Error("이 브라우저에서 안전한 비밀번호 처리를 지원하지 않습니다.");
+        if (authMode === "signup") {
+          if (!/^[a-zA-Z0-9_]{3,24}$/.test(username)) throw new Error("아이디는 영문, 숫자, 밑줄로 3~24자 입력해주세요.");
+          if (accounts.some(account => account.username.toLowerCase() === username.toLowerCase())) throw new Error("이미 사용 중인 아이디예요.");
+          const saltBytes = new Uint8Array(16); crypto.getRandomValues(saltBytes);
+          const salt = Array.from(saltBytes, byte => byte.toString(16).padStart(2, "0")).join("");
+          const account = {
+            id: `user-${salt}`, username, displayName: form.elements.displayName.value.trim() || username,
+            bio: "", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
+            privateProfile: false, allowInvites: true, salt, passwordHash: await hashPassword(password, salt)
+          };
+          accounts.push(account);
+          localStorage.setItem("moa.accounts", JSON.stringify(accounts));
+          currentAccount = account;
+        } else {
+          const account = accounts.find(item => item.username.toLowerCase() === username.toLowerCase());
+          if (!account || await hashPassword(password, account.salt) !== account.passwordHash) throw new Error("아이디 또는 비밀번호를 확인해주세요.");
+          currentAccount = account;
+        }
+        localStorage.setItem("moa.session", currentAccount.id);
+        form.reset(); setAuthMode("signup"); enterApp();
+      } catch (error) {
+        description.textContent = error instanceof Error ? error.message : "로그인 처리 중 문제가 발생했어요.";
+      }
+    });
+    if (currentAccount) enterApp();
+    else {
+      if (sessionId) localStorage.removeItem("moa.session");
+      document.body.classList.add("auth-required");
+      setAuthMode("signup");
+    }
   </script>
 </body>
 </html>
