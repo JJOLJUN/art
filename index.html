@@ -138,6 +138,35 @@
     .post-action:hover, .post-action.liked { color: #ec6c9f; }
     .post-action.saved { color: #7152dc; }
     .post-action svg { width: 15px; height: 15px; }
+    .post-image, .post-content h3 { cursor: zoom-in; }
+    .post-detail-modal { width: min(100%, 980px); padding: 16px; }
+    .post-detail-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); gap: 20px; }
+    .detail-visual { min-height: 360px; display: grid; place-items: center; overflow: hidden; border-radius: 15px; background: #211d2b; }
+    .detail-visual img { display: block; max-width: 100%; max-height: 74vh; object-fit: contain; }
+    .detail-side { min-width: 0; display: flex; flex-direction: column; }
+    .detail-side h2 { margin: 18px 0 7px; font-size: 19px; }
+    .detail-description { color: #716b7b; font-size: 12px; line-height: 1.7; white-space: pre-wrap; }
+    .detail-tags { color: #856be0; font-size: 11px; }
+    .detail-like { align-self: flex-start; margin: 12px 0; }
+    .detail-comments { min-height: 120px; max-height: 32vh; overflow: auto; border-top: 1px solid var(--line); }
+    .profile-dashboard { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(220px, .8fr); gap: 14px; margin-top: 14px; }
+    .profile-panel { min-width: 0; padding: 16px; background: white; border: 1px solid var(--line); border-radius: 17px; }
+    .profile-panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .profile-panel-head h3 { margin: 0; font-size: 13px; }
+    .profile-panel-head span, .profile-panel-head a { color: var(--muted); font-size: 10px; }
+    #profileDetails { overflow-wrap: anywhere; }
+    .profile-artwork-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .profile-artwork { padding: 0; border: 0; border-radius: 11px; background: #f1edf6; overflow: hidden; text-align: left; }
+    .profile-artwork img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+    .profile-artwork span { display: block; padding: 7px; overflow: hidden; color: var(--ink); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .profile-room-row { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-bottom: 1px solid #f2eff5; }
+    .profile-room-row:last-child { border-bottom: 0; }
+    .profile-room-row strong { flex: 1; min-width: 0; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .profile-room-row button { padding: 6px 8px; border: 0; border-radius: 8px; background: #f2effb; color: #7659d4; font-size: 9px; font-weight: 700; }
+    .avatar-upload { display: flex; align-items: center; gap: 12px; }
+    .avatar-upload img { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; background: #eee8ff; }
+    .avatar-upload input { flex: 1; width: auto; min-width: 0; max-width: 230px; }
+    .post-detail-trigger { position: absolute; bottom: 11px; left: 11px; padding: 7px 10px; border: 0; border-radius: 9px; background: #ffffffed; color: #51416f; font-size: 10px; font-weight: 700; }
     .profile-card { display: flex; align-items: center; gap: 17px; background: white; border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
     .profile-card > .avatar { width: 62px; height: 62px; }
     .profile-summary { min-width: 0; flex: 1; }
@@ -225,6 +254,11 @@
       .room-tools { flex-direction: column; }
       .room-tools input { height: 39px; }
       .room-list { grid-template-columns: 1fr; }
+      .profile-dashboard { grid-template-columns: 1fr; }
+      .post-detail-layout { grid-template-columns: 1fr; }
+      .detail-visual { min-height: 220px; }
+      .detail-visual img { max-height: 46vh; }
+      .detail-comments { max-height: 25vh; }
     }
     @media (max-width: 1160px) {
       .layout { grid-template-columns: 190px minmax(0, 1fr); padding: 24px; gap: 21px; }
@@ -432,8 +466,18 @@
           <div class="section-heading"><span class="heading-icon">♡</span><div><h2>나의 창작 기록</h2><p>작품과 함께 차곡차곡 쌓이는 나만의 성장</p></div></div>
           <div class="profile-card">
             <img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="서윤 작가 프로필">
-            <div class="profile-summary"><h3>서윤 작가 <span style="font-size:10px;color:#8b7ac4;font-weight:500">@seoyun.draw</span></h3><p>그림으로 상상한 장면들을 기록하고 있어요. 함께 그리고 피드백 나누는 걸 좋아합니다 ✨</p><div class="profile-stats"><div><strong id="myArtworkCount">12</strong><span>작품</span></div><div><strong>248</strong><span>팔로워</span></div><div><strong>36</strong><span>함께한 창작</span></div></div></div>
+            <div class="profile-summary"><h3>서윤 작가 <span style="font-size:10px;color:#8b7ac4;font-weight:500">@seoyun.draw</span></h3><p>그림으로 상상한 장면들을 기록하고 있어요. 함께 그리고 피드백 나누는 걸 좋아합니다 ✨</p><div id="profileDetails" style="margin-top:7px;color:#8b7ac4;font-size:10px"></div><div class="profile-stats"><div><strong id="myArtworkCount">0</strong><span>작품</span></div><div><strong id="profileRoomCount">0</strong><span>참여 방</span></div><div><strong id="profileProjectCount">0</strong><span>협업 신청</span></div></div></div>
             <div class="profile-buttons"><button class="button outline profile-edit">프로필 편집</button><button class="button gradient portfolio-button">포트폴리오</button></div>
+          </div>
+          <div class="profile-dashboard">
+            <section class="profile-panel">
+              <div class="profile-panel-head"><h3>내가 올린 그림</h3><span id="profileArtworkLabel">0개</span></div>
+              <div class="profile-artwork-grid" id="profileArtworkList"></div>
+            </section>
+            <section class="profile-panel">
+              <div class="profile-panel-head"><h3>참여 중인 방</h3><a href="#privateRooms">방 둘러보기 →</a></div>
+              <div id="profileRoomList"></div>
+            </section>
           </div>
         </section>
       </main>
@@ -487,11 +531,21 @@
       <button class="button gradient modal-submit" type="submit">피드에 공유하기</button>
     </form>
   </div>
-  <div class="modal-backdrop" id="commentModal" role="dialog" aria-modal="true" aria-labelledby="commentTitle">
-    <div class="modal">
-      <div class="modal-head"><h2 id="commentTitle">작품 이야기</h2><button class="close-modal" type="button" aria-label="닫기">×</button></div>
-      <div class="comment-list" id="commentList"></div>
-      <form class="comment-form" id="commentForm"><input name="comment" required maxlength="240" placeholder="따뜻한 피드백을 남겨보세요"><button class="button gradient" type="submit" style="height:38px;padding:0 12px">등록</button></form>
+  <div class="modal-backdrop" id="postDetailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <div class="modal post-detail-modal">
+      <div class="modal-head"><span></span><button class="close-modal" type="button" aria-label="닫기">×</button></div>
+      <div class="post-detail-layout">
+        <div class="detail-visual"><img id="detailImage" alt=""></div>
+        <div class="detail-side">
+          <div class="post-author"><img class="avatar" id="detailAvatar" alt=""><div><strong id="detailAuthor"></strong><span id="detailHandle"></span></div></div>
+          <h2 id="detailTitle"></h2>
+          <p class="detail-description" id="detailDescription"></p>
+          <div class="detail-tags" id="detailTags"></div>
+          <button class="button outline detail-like" id="detailLikeButton" type="button">♡ 좋아요</button>
+          <div class="comment-list detail-comments" id="detailCommentList"></div>
+          <form class="comment-form" id="detailCommentForm"><input name="comment" required maxlength="240" placeholder="따뜻한 댓글을 남겨보세요"><button class="button gradient" type="submit" style="height:38px;padding:0 12px">등록</button></form>
+        </div>
+      </div>
     </div>
   </div>
   <div class="modal-backdrop" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
@@ -509,11 +563,15 @@
       <div class="comment-list" id="chatList"></div>
       <form class="comment-form" id="chatForm"><input name="message" required maxlength="240" placeholder="함께 나눌 이야기를 입력하세요"><button class="button gradient" type="submit" style="height:38px;padding:0 12px">전송</button></form>
     </div>
+  </div>
     <div class="modal-backdrop" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
       <form class="modal" id="profileForm">
         <div class="modal-head"><h2 id="profileModalTitle">프로필 및 설정</h2><button class="close-modal" type="button" aria-label="닫기">×</button></div>
+        <div class="field"><span>프로필 사진</span><div class="avatar-upload"><img id="avatarPreview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=100&amp;q=80" alt="프로필 사진 미리보기"><input name="avatarFile" type="file" accept="image/*"></div></div>
         <label class="field"><span>프로필 이름</span><input name="displayName" required maxlength="30"></label>
         <label class="field"><span>소개</span><textarea name="bio" maxlength="180"></textarea></label>
+        <label class="field"><span>주요 분야</span><input name="specialty" maxlength="50" placeholder="예: 수채화 · 캐릭터 일러스트"></label>
+        <label class="field"><span>웹사이트 / 포트폴리오 링크</span><input name="website" type="url" maxlength="200" placeholder="https://"></label>
         <label class="field"><span>아이디 (변경 불가)</span><input name="username" disabled></label>
         <label class="field"><span><input name="privateProfile" type="checkbox" style="width:auto;margin-right:8px">프로필을 비공개로 표시</span></label>
         <label class="field"><span><input name="allowInvites" type="checkbox" style="width:auto;margin-right:8px">프라이빗룸 초대 허용</span></label>
@@ -539,7 +597,6 @@
         <button class="button outline modal-submit" id="leaveRoomButton" type="button">방 나가기</button>
       </div>
     </div>
-  </div>
   <div class="toast" id="toast" role="status"></div>
 
   <script>
@@ -607,6 +664,7 @@
       const container = document.getElementById("postList");
       if (!posts.length) {
         container.innerHTML = '<div class="empty">검색 결과가 없어요. 다른 키워드로 찾아보세요.</div>';
+        renderProfileDashboard();
         return;
       }
       container.innerHTML = posts.map(post => {
@@ -614,14 +672,54 @@
         const saved = state.saved.includes(post.id);
         const tags = (post.tags || []).map(tag => `#${escapeHTML(tag)}`).join(" ");
         return `<article class="post-card" data-post="${escapeHTML(post.id)}">
-          <div class="post-image-wrap"><img class="post-image" src="${escapeHTML(post.image)}" alt="${escapeHTML(post.title)}"><button class="post-save ${saved ? "saved" : ""}" data-action="save" aria-label="작품 저장">${saved ? "▣" : "♧"}</button></div>
+          <div class="post-image-wrap"><img class="post-image" data-action="detail" src="${escapeHTML(post.image)}" alt="${escapeHTML(post.title)}"><button class="post-detail-trigger" data-action="detail" aria-label="${escapeHTML(post.title)} 자세히 보기">크게 보기 ↗</button><button class="post-save ${saved ? "saved" : ""}" data-action="save" aria-label="작품 저장">${saved ? "▣" : "♧"}</button></div>
           <div class="post-content"><div class="post-author"><img class="avatar" src="${escapeHTML(post.avatar)}" alt=""><div><strong>${escapeHTML(post.author)}</strong><span>${escapeHTML(post.handle)} · ${post.created === 0 ? "방금 전" : `${post.created}시간 전`}</span></div></div>
-          <h3>${escapeHTML(post.title)}</h3><p class="description">${escapeHTML(post.description || "")}</p><div class="post-tags">${tags}</div>
+          <h3 data-action="detail">${escapeHTML(post.title)}</h3><p class="description">${escapeHTML(post.description || "")}</p><div class="post-tags">${tags}</div>
           <div class="post-actions"><button class="post-action ${liked ? "liked" : ""}" data-action="like"><svg viewBox="0 0 24 24" fill="${liked ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"></path></svg>${post.likes}</button><button class="post-action" data-action="comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 8.7 3.9a8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"></path></svg>${(post.comments || []).length}</button><button class="post-action" data-action="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V3m0 0L7 8m5-5 5 5"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path></svg>공유</button></div>
           </div></article>`;
       }).join("");
       const count = document.getElementById("myArtworkCount");
-      if (count) count.textContent = 12 + state.posts.filter(post => currentAccount && post.handle === `@${currentAccount.username}`).length;
+      if (count) count.textContent = state.posts.filter(post => currentAccount && post.handle === getHandle()).length;
+      renderProfileDashboard();
+    };
+    const renderPostDetail = post => {
+      document.getElementById("detailImage").src = post.image;
+      document.getElementById("detailImage").alt = post.title;
+      document.getElementById("detailAvatar").src = post.avatar;
+      document.getElementById("detailAuthor").textContent = post.author;
+      document.getElementById("detailHandle").textContent = post.handle;
+      document.getElementById("detailTitle").textContent = post.title;
+      document.getElementById("detailDescription").textContent = post.description || "";
+      document.getElementById("detailTags").textContent = (post.tags || []).map(tag => `#${tag}`).join(" ");
+      const likeButton = document.getElementById("detailLikeButton");
+      const liked = state.liked.includes(post.id);
+      likeButton.textContent = `${liked ? "♥" : "♡"} 좋아요 · ${post.likes}`;
+      likeButton.classList.toggle("liked", liked);
+      likeButton.setAttribute("aria-pressed", String(liked));
+      renderDetailComments(post);
+    };
+    const openPostDetail = (post, focusComment = false) => {
+      state.activePost = post.id;
+      renderPostDetail(post);
+      modal("postDetailModal", true);
+      if (focusComment) document.querySelector("#detailCommentForm input").focus();
+    };
+    const togglePostLike = post => {
+      if (state.liked.includes(post.id)) {
+        state.liked = state.liked.filter(id => id !== post.id);
+        post.likes = Math.max(0, post.likes - 1);
+      } else {
+        state.liked.push(post.id);
+        post.likes += 1;
+      }
+      persist(); renderPosts();
+      if (state.activePost === post.id && document.getElementById("postDetailModal").classList.contains("open")) renderPostDetail(post);
+    };
+    const renderDetailComments = post => {
+      const comments = post.comments || [];
+      document.getElementById("detailCommentList").innerHTML = comments.length
+        ? comments.map(comment => `<div class="comment"><img class="avatar" src="${escapeHTML(comment.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80")}" alt=""><p><strong>${escapeHTML(comment.author || "모아 작가")}</strong>${escapeHTML(comment.text || comment)}</p></div>`).join("")
+        : '<div class="empty">첫 번째 응원의 댓글을 남겨보세요!</div>';
     };
     const renderCreatedProjects = () => {
       const container = document.querySelector(".projects");
@@ -653,6 +751,33 @@
         <h3>${escapeHTML(room.name)}</h3><p>${escapeHTML(room.description || "초대된 멤버와 나누는 작은 공간")}</p>
         <div class="room-card-foot"><span class="room-code">초대 코드 · ${escapeHTML(room.inviteCode)}</span><button class="room-action" data-room-action="open">열기</button><button class="room-action" data-room-action="copy">코드 복사</button></div>
       </article>`).join("") : '<div class="empty">아직 참여한 프라이빗룸이 없어요. 방을 만들거나 초대 코드를 입력해 참여해보세요.</div>';
+      renderProfileDashboard();
+    };
+    const renderProfileDashboard = () => {
+      if (!currentAccount) return;
+      const artworks = state.posts.filter(post => post.handle === getHandle());
+      const rooms = privateRooms.filter(room => state.roomIds.includes(room.id));
+      document.getElementById("profileArtworkLabel").textContent = `${artworks.length}개`;
+      document.getElementById("profileRoomCount").textContent = rooms.length;
+      document.getElementById("profileProjectCount").textContent = state.projects.length;
+      document.getElementById("profileArtworkList").innerHTML = artworks.length
+        ? artworks.map(post => `<button class="profile-artwork" type="button" data-profile-post="${escapeHTML(post.id)}"><img src="${escapeHTML(post.image)}" alt="${escapeHTML(post.title)}"><span>${escapeHTML(post.title)}</span></button>`).join("")
+        : '<div class="empty">아직 올린 그림이 없어요.</div>';
+      document.getElementById("profileRoomList").innerHTML = rooms.length
+        ? rooms.map(room => `<div class="profile-room-row"><strong>🔒 ${escapeHTML(room.name)}</strong><button type="button" data-profile-room="${escapeHTML(room.id)}">열기</button></div>`).join("")
+        : '<div class="empty">참여 중인 방이 없어요.</div>';
+      document.getElementById("profileArtworkList").querySelectorAll("[data-profile-post]").forEach(button => {
+        button.addEventListener("click", () => {
+          const post = state.posts.find(item => item.id === button.dataset.profilePost);
+          if (post) openPostDetail(post);
+        });
+      });
+      document.getElementById("profileRoomList").querySelectorAll("[data-profile-room]").forEach(button => {
+        button.addEventListener("click", () => {
+          const room = privateRooms.find(item => item.id === button.dataset.profileRoom);
+          if (room) renderPrivateRoom(room);
+        });
+      });
     };
     const renderPrivateRoom = room => {
       state.activeRoomId = room.id;
@@ -676,11 +801,15 @@
       document.querySelector(".profile-mini span").textContent = handle;
       document.querySelector(".profile-card .profile-summary h3").innerHTML = `${escapeHTML(currentAccount.displayName)} <span style="font-size:10px;color:#8b7ac4;font-weight:500">${escapeHTML(handle)}</span>`;
       document.querySelector(".profile-card .profile-summary p").textContent = currentAccount.bio || "그림으로 상상한 장면들을 기록하고 있어요.";
+      document.getElementById("profileDetails").textContent = [currentAccount.specialty, currentAccount.website].filter(Boolean).join(" · ");
       document.getElementById("profileForm").elements.displayName.value = currentAccount.displayName;
       document.getElementById("profileForm").elements.username.value = currentAccount.username;
       document.getElementById("profileForm").elements.bio.value = currentAccount.bio || "";
+      document.getElementById("profileForm").elements.specialty.value = currentAccount.specialty || "";
+      document.getElementById("profileForm").elements.website.value = currentAccount.website || "";
       document.getElementById("profileForm").elements.privateProfile.checked = Boolean(currentAccount.privateProfile);
       document.getElementById("profileForm").elements.allowInvites.checked = currentAccount.allowInvites !== false;
+      document.getElementById("avatarPreview").src = currentAccount.avatar;
       document.querySelector(".profile-mini .avatar").src = currentAccount.avatar;
       document.querySelector(".profile-card > .avatar").src = currentAccount.avatar;
       document.querySelector("#accountButton .avatar").src = currentAccount.avatar;
@@ -716,6 +845,29 @@
       reader.onerror = () => toast("이미지를 읽지 못했어요. 다시 선택해주세요.");
       reader.readAsDataURL(file);
     });
+    document.getElementById("profileForm").elements.avatarFile.addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith("image/")) { toast("이미지 파일을 선택해주세요."); return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const image = new Image();
+        image.onload = () => {
+          const scale = Math.min(1, 256 / Math.max(image.width, image.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(image.width * scale));
+          canvas.height = Math.max(1, Math.round(image.height * scale));
+          canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+          const data = canvas.toDataURL("image/jpeg", .84);
+          document.getElementById("profileForm").dataset.avatarData = data;
+          document.getElementById("avatarPreview").src = data;
+        };
+        image.onerror = () => toast("프로필 이미지를 불러오지 못했어요.");
+        image.src = reader.result;
+      };
+      reader.onerror = () => toast("프로필 이미지를 읽지 못했어요.");
+      reader.readAsDataURL(file);
+    });
     document.getElementById("postForm").addEventListener("submit", event => {
       event.preventDefault();
       const form = event.currentTarget;
@@ -739,15 +891,15 @@
       const post = state.posts.find(item => item.id === card.dataset.post);
       if (!post) return;
       const action = button.dataset.action;
-      if (action === "like") {
-        if (state.liked.includes(post.id)) { state.liked = state.liked.filter(id => id !== post.id); post.likes = Math.max(0, post.likes - 1); }
-        else { state.liked.push(post.id); post.likes += 1; }
-        persist(); renderPosts();
+      if (action === "detail") {
+        openPostDetail(post);
+      } else if (action === "like") {
+        togglePostLike(post);
       } else if (action === "save") {
         state.saved = state.saved.includes(post.id) ? state.saved.filter(id => id !== post.id) : [...state.saved, post.id];
         persist(); renderPosts(); toast(state.saved.includes(post.id) ? "작품을 저장했어요" : "저장을 취소했어요");
       } else if (action === "comment") {
-        state.activePost = post.id; renderComments(post); modal("commentModal", true);
+        openPostDetail(post, true);
       } else if (action === "share") {
         const share = { title: post.title, text: `${post.title} — 모아`, url: location.href };
         if (navigator.share) navigator.share(share).catch(() => {});
@@ -755,19 +907,18 @@
         else toast("작품을 함께 감상해보세요!");
       }
     });
-    function renderComments(post) {
-      document.getElementById("commentTitle").textContent = post.title;
-      const comments = post.comments || [];
-      document.getElementById("commentList").innerHTML = comments.length ? comments.map(comment => `<div class="comment"><img class="avatar" src="${escapeHTML(comment.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80")}" alt=""><p><strong>${escapeHTML(comment.author || "모아 작가")}</strong>${escapeHTML(comment.text || comment)}</p></div>`).join("") : '<div class="empty">첫 번째 응원의 말을 남겨보세요!</div>';
-    }
-    document.getElementById("commentForm").addEventListener("submit", event => {
+    document.getElementById("detailLikeButton").addEventListener("click", () => {
+      const post = state.posts.find(item => item.id === state.activePost);
+      if (post) togglePostLike(post);
+    });
+    document.getElementById("detailCommentForm").addEventListener("submit", event => {
       event.preventDefault();
       const post = state.posts.find(item => item.id === state.activePost);
       const input = event.currentTarget.elements.comment;
       if (!post || !input.value.trim()) return;
       post.comments = [...(post.comments || []), { author: currentAccount.displayName, avatar: currentAccount.avatar, text: input.value.trim() }];
-      persist(); renderComments(post); renderPosts(); input.value = "";
-      document.getElementById("commentList").scrollTop = document.getElementById("commentList").scrollHeight;
+      persist(); renderDetailComments(post); renderPosts(); input.value = "";
+      document.getElementById("detailCommentList").scrollTop = document.getElementById("detailCommentList").scrollHeight;
     });
     document.querySelector(".project-create").addEventListener("click", () => modal("projectModal", true));
     document.getElementById("projectForm").addEventListener("submit", event => {
@@ -845,17 +996,27 @@
     document.getElementById("searchInput").addEventListener("input", renderPosts);
     document.getElementById("noticeButton").addEventListener("click", () => toast("새로운 알림이 없어요. 창작에 집중해볼까요?"));
     document.getElementById("messagesButton").addEventListener("click", () => document.getElementById("privateRooms").scrollIntoView({ behavior: "smooth" }));
-    document.getElementById("accountButton").addEventListener("click", () => modal("profileModal", true));
-    document.querySelector(".profile-edit").addEventListener("click", () => modal("profileModal", true));
+    const showProfileSettings = () => {
+      const form = document.getElementById("profileForm");
+      delete form.dataset.avatarData;
+      form.elements.avatarFile.value = "";
+      updateAccountUI(); modal("profileModal", true);
+    };
+    document.getElementById("accountButton").addEventListener("click", showProfileSettings);
+    document.querySelector(".profile-edit").addEventListener("click", showProfileSettings);
     document.getElementById("profileForm").addEventListener("submit", event => {
       event.preventDefault();
       const form = event.currentTarget;
       currentAccount.displayName = form.elements.displayName.value.trim();
       currentAccount.bio = form.elements.bio.value.trim();
+      currentAccount.specialty = form.elements.specialty.value.trim();
+      currentAccount.website = form.elements.website.value.trim();
+      currentAccount.avatar = form.dataset.avatarData || currentAccount.avatar;
       currentAccount.privateProfile = form.elements.privateProfile.checked;
       currentAccount.allowInvites = form.elements.allowInvites.checked;
       try {
         localStorage.setItem("moa.accounts", JSON.stringify(accounts));
+        delete form.dataset.avatarData;
         updateAccountUI(); renderPosts(); modal("profileModal", false); toast("프로필 설정을 저장했어요.");
       } catch { toast("저장 공간이 부족해 설정을 저장하지 못했어요."); }
     });
@@ -868,7 +1029,8 @@
     });
     document.querySelector(".portfolio-button").addEventListener("click", () => {
       const portfolio = state.posts.filter(post => post.handle === getHandle());
-      const file = new Blob([JSON.stringify({ profile: currentAccount, artworks: portfolio }, null, 2)], { type: "application/json" });
+      const profile = (({ displayName, username, bio, specialty, website, avatar }) => ({ displayName, username, bio, specialty, website, avatar }))(currentAccount);
+      const file = new Blob([JSON.stringify({ profile, artworks: portfolio }, null, 2)], { type: "application/json" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(file); link.download = `${currentAccount.username}-portfolio.json`; link.click();
       setTimeout(() => URL.revokeObjectURL(link.href), 1000); toast("내 작품 목록을 포트폴리오 파일로 저장했어요.");
