@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f7fc">
+  <title>모아 — 함께 그리는 아트 커뮤니티</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #211d2b;
+      --muted: #898494;
+      --line: #eeeaf3;
+      --paper: #fff;
+      --canvas: #f8f7fc;
+      --purple: #7755e8;
+      --blue: #5e8cf7;
+      --pink: #f17fb0;
+      --gradient: linear-gradient(110deg, #8659ed 0%, #6879f4 58%, #e17fc8 100%);
+      --shadow: 0 12px 35px rgba(48, 34, 79, .055);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 94px; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); font-family: "DM Sans", "Noto Sans KR", sans-serif; font-size: 14px; }
+    button, input, textarea { font: inherit; }
+    button { color: inherit; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    .app { max-width: 1600px; margin: auto; min-height: 100vh; }
+    .topbar { height: 74px; padding: 0 38px; display: flex; align-items: center; gap: 30px; background: rgba(255,255,255,.9); border-bottom: 1px solid var(--line); position: sticky; z-index: 20; top: 0; backdrop-filter: blur(14px); }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 800; letter-spacing: -1.2px; min-width: 210px; }
+    .brand-mark { width: 34px; height: 34px; border-radius: 12px; background: var(--gradient); display: grid; place-items: center; color: white; font-size: 19px; box-shadow: 0 5px 12px #8664e54a; }
+    .search { height: 42px; max-width: 460px; flex: 1; position: relative; }
+    .search input { width: 100%; height: 100%; background: #f7f6fa; border: 1px solid transparent; outline: 0; border-radius: 13px; padding: 0 16px 0 42px; color: var(--ink); }
+    .search input:focus { border-color: #cbbdf8; background: white; }
+    .search svg { position: absolute; left: 14px; top: 13px; color: #a39eae; }
+    .top-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .icon-button { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--line); background: white; border-radius: 13px; position: relative; }
+    .icon-button:hover { background: #f7f4ff; color: var(--purple); }
+    .notification-dot { width: 7px; height: 7px; background: #f276a9; border: 1px solid white; position: absolute; right: 8px; top: 8px; border-radius: 50%; }
+    .avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: #eee8ff; }
+    .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr) 286px; gap: 26px; padding: 27px 38px 80px; align-items: start; }
+    .left-rail, .right-rail { position: sticky; top: 96px; }
+    .left-rail { padding: 8px 0; }
+    .rail-label { color: #a19ba9; text-transform: uppercase; letter-spacing: 1.2px; font-size: 10px; font-weight: 800; padding: 0 13px; margin: 17px 0 8px; }
+    .nav-link { display: flex; gap: 12px; align-items: center; height: 44px; padding: 0 13px; margin: 3px 0; border-radius: 13px; color: #767181; font-weight: 600; transition: .18s ease; }
+    .nav-link svg { width: 19px; height: 19px; }
+    .nav-link:hover { color: var(--purple); background: #f0ebff; }
+    .nav-link.active { background: #eee9ff; color: #704be0; font-weight: 700; }
+    .nav-count { margin-left: auto; font-size: 11px; color: #9c91c5; }
+    .profile-mini { margin-top: 29px; padding: 15px 13px; border-top: 1px solid var(--line); display: flex; gap: 10px; align-items: center; }
+    .profile-mini .avatar { width: 34px; height: 34px; }
+    .profile-mini strong { display: block; font-size: 12px; }
+    .profile-mini span { color: var(--muted); font-size: 11px; }
+    .main { min-width: 0; }
+    .hero { border-radius: 24px; min-height: 240px; padding: 31px 34px; color: white; overflow: hidden; position: relative; background: linear-gradient(112deg, #282047 0%, #493b83 45%, #6f62c8 100%); box-shadow: 0 16px 38px #51418b24; }
+    .hero:before, .hero:after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
+    .hero:before { width: 290px; height: 290px; right: 12%; top: -168px; background: #c48dfc32; }
+    .hero:after { width: 240px; height: 240px; right: -37px; bottom: -155px; background: #79b4ff38; }
+    .hero-copy { position: relative; z-index: 1; max-width: 440px; }
+    .eyebrow { color: #d7cbff; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+    .hero h1 { font-size: clamp(24px, 3vw, 33px); line-height: 1.35; letter-spacing: -1.2px; margin: 13px 0 9px; }
+    .hero p { color: #d7d2e8; font-size: 13px; line-height: 1.8; margin: 0 0 20px; }
+    .button { border: 0; border-radius: 12px; height: 41px; padding: 0 16px; font-weight: 700; display: inline-flex; gap: 8px; align-items: center; justify-content: center; transition: transform .18s, filter .18s; }
+    .button:hover { transform: translateY(-1px); filter: brightness(1.04); }
+    .button.gradient { background: var(--gradient); color: white; box-shadow: 0 6px 15px #7458dd35; }
+    .button.light { background: white; color: #55458d; }
+    .button.outline { background: white; border: 1px solid var(--line); color: #686274; height: 36px; padding: 0 12px; font-size: 12px; }
+    .hero-art { position: absolute; right: 24px; bottom: -9px; width: min(42%, 260px); height: 215px; z-index: 0; border-radius: 120px 120px 20px 20px; object-fit: cover; object-position: center 38%; border: 5px solid #ffffff2b; transform: rotate(3deg); box-shadow: 0 15px 35px #18132a61; }
+    .hero-sticker { position: absolute; right: 29%; top: 37px; z-index: 2; background: #ffffffeb; color: #5f4caa; border-radius: 12px; padding: 9px 12px; font-size: 11px; font-weight: 700; box-shadow: var(--shadow); transform: rotate(-5deg); }
+    .section { margin-top: 29px; scroll-margin-top: 95px; }
+    .section-heading { display: flex; align-items: center; gap: 12px; margin: 0 0 15px; }
+    .section-heading h2 { font-size: 17px; margin: 0; letter-spacing: -.5px; }
+    .section-heading p { margin: 3px 0 0; color: var(--muted); font-size: 11px; }
+    .section-heading .more { margin-left: auto; color: #8174b2; font-size: 11px; font-weight: 700; }
+    .heading-icon { width: 34px; height: 34px; border-radius: 11px; color: #7755e8; background: #eee9ff; display: grid; place-items: center; }
+    .challenge-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .challenge-card { position: relative; min-height: 130px; overflow: hidden; padding: 18px; border-radius: 18px; background: linear-gradient(120deg, #fff4f8, #fff); border: 1px solid #f7eaf0; }
+    .challenge-card.blue { background: linear-gradient(120deg, #eef5ff, #fff); border-color: #e8effb; }
+    .challenge-card .tag { color: #e478a1; font-size: 10px; font-weight: 800; }
+    .challenge-card.blue .tag { color: #6484d9; }
+    .challenge-card h3 { margin: 8px 0 5px; font-size: 15px; }
+    .challenge-card p { margin: 0 0 12px; color: #898391; font-size: 11px; }
+    .challenge-card .button { height: 30px; padding: 0 11px; font-size: 10px; border-radius: 9px; }
+    .challenge-emoji { font-size: 36px; position: absolute; right: 17px; top: 37px; filter: drop-shadow(0 6px 8px #ad83c52b); transform: rotate(9deg); }
+    .community-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .community-tile { background: white; border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+    .community-tile .community-icon { width: 40px; height: 40px; margin-bottom: 10px; }
+    .community-tile h3 { font-size: 12px; margin: 0 0 5px; }
+    .community-tile p { min-height: 31px; margin: 0 0 10px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .community-tile .community-foot { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 9px; }
+    .community-tile .community-join { font-size: 9px; }
+    .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .project-card { background: white; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 5px 20px #49316b08; }
+    .project-art { height: 112px; position: relative; overflow: hidden; background: #eee7fa; }
+    .project-art img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+    .project-card:hover .project-art img { transform: scale(1.04); }
+    .project-status { position: absolute; top: 10px; left: 10px; color: #5943aa; background: #fff; padding: 5px 8px; border-radius: 8px; font-size: 9px; font-weight: 800; }
+    .project-body { padding: 13px 14px 14px; }
+    .project-body h3 { font-size: 13px; margin: 0 0 6px; }
+    .project-body p { font-size: 10px; color: var(--muted); margin: 0 0 12px; }
+    .progress-line { height: 5px; border-radius: 8px; background: #f0edf5; overflow: hidden; margin-bottom: 7px; }
+    .progress-line span { height: 100%; display: block; border-radius: inherit; background: var(--gradient); }
+    .project-foot { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 10px; }
+    .project-foot .button { height: 29px; font-size: 10px; padding: 0 10px; }
+    .feed-tabs { display: flex; gap: 7px; margin-left: auto; }
+    .feed-tab { height: 30px; background: white; border: 1px solid var(--line); color: #8d8797; border-radius: 9px; padding: 0 10px; font-size: 10px; }
+    .feed-tab.selected { color: #6d4bd7; background: #f0ebff; border-color: #e9e1ff; font-weight: 700; }
+    .post-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .post-card { min-width: 0; background: white; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+    .post-image-wrap { height: 190px; position: relative; background: #eeeaf3; }
+    .post-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .post-save { position: absolute; top: 11px; right: 11px; background: #ffffffeb; border: 0; border-radius: 10px; width: 33px; height: 33px; display: grid; place-items: center; color: #706a7b; }
+    .post-content { padding: 13px 14px 12px; }
+    .post-author { display: flex; align-items: center; gap: 8px; }
+    .post-author .avatar { width: 29px; height: 29px; }
+    .post-author strong { display: block; font-size: 10px; }
+    .post-author span { color: #a29dab; display: block; font-size: 9px; margin-top: 2px; }
+    .post-content h3 { font-size: 13px; margin: 12px 0 5px; }
+    .post-content .description { color: #807b89; font-size: 10px; line-height: 1.6; margin: 0; }
+    .post-tags { color: #856be0; font-size: 10px; margin-top: 7px; }
+    .post-actions { display: flex; gap: 14px; border-top: 1px solid #f2eff5; margin-top: 12px; padding-top: 10px; }
+    .post-action { border: 0; padding: 0; color: #8a8592; background: none; display: inline-flex; gap: 5px; align-items: center; font-size: 10px; }
+    .post-action:hover, .post-action.liked { color: #ec6c9f; }
+    .post-action.saved { color: #7152dc; }
+    .post-action svg { width: 15px; height: 15px; }
+    .profile-card { display: flex; align-items: center; gap: 17px; background: white; border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
+    .profile-card > .avatar { width: 62px; height: 62px; }
+    .profile-summary { min-width: 0; flex: 1; }
+    .profile-summary h3 { font-size: 14px; margin: 0 0 5px; }
+    .profile-summary p { font-size: 10px; color: var(--muted); margin: 0; line-height: 1.6; }
+    .profile-stats { display: flex; gap: 18px; margin-top: 11px; }
+    .profile-stats strong { display: block; font-size: 12px; }
+    .profile-stats span { display: block; color: var(--muted); font-size: 9px; margin-top: 2px; }
+    .profile-buttons { display: flex; gap: 7px; }
+    .profile-buttons .button { font-size: 10px; white-space: nowrap; }
+    .right-rail { display: flex; flex-direction: column; gap: 17px; }
+    .side-card { border: 1px solid var(--line); border-radius: 18px; padding: 17px; background: white; box-shadow: 0 5px 20px #49316b07; }
+    .side-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .side-title h3 { margin: 0; font-size: 13px; }
+    .side-title a { font-size: 10px; color: #856bd7; font-weight: 700; }
+    .community { display: flex; align-items: center; gap: 10px; margin: 12px 0; }
+    .community-icon { width: 37px; height: 37px; flex: 0 0 auto; display: grid; place-items: center; font-size: 18px; border-radius: 12px; background: #f2edff; }
+    .community-info { min-width: 0; flex: 1; }
+    .community-info strong { display: block; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .community-info span { font-size: 9px; color: var(--muted); display: block; margin-top: 4px; }
+    .community-join { border: 0; background: #f2effb; color: #7659d4; font-weight: 700; font-size: 9px; border-radius: 8px; padding: 7px 8px; }
+    .community-join.joined { color: #39876d; background: #eaf7f1; }
+    .live-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #58c793; margin-right: 4px; }
+    .artist { display: flex; align-items: center; gap: 10px; margin: 13px 0; }
+    .artist .avatar { width: 35px; height: 35px; }
+    .artist-info { flex: 1; }
+    .artist-info strong { display: block; font-size: 10px; }
+    .artist-info span { display: block; font-size: 9px; color: var(--muted); margin-top: 3px; }
+    .follow { border: 1px solid #e8e2f5; background: white; color: #7755d4; padding: 6px 8px; border-radius: 8px; font-weight: 700; font-size: 9px; }
+    .follow.following { border-color: #e3dcf8; background: #f3efff; }
+    .prompt-card { background: linear-gradient(145deg, #34284e, #584992); color: white; border-radius: 18px; padding: 17px; position: relative; overflow: hidden; }
+    .prompt-card:after { content: "✦"; position: absolute; right: 17px; top: 9px; font-size: 44px; color: #ffffff20; }
+    .prompt-card span { font-size: 9px; color: #c7b9f4; font-weight: 700; letter-spacing: .6px; }
+    .prompt-card h3 { font-size: 15px; margin: 9px 0 5px; }
+    .prompt-card p { font-size: 10px; color: #d5cfe3; line-height: 1.6; margin: 0 0 13px; }
+    .prompt-card button { background: #ffffff1b; border: 1px solid #ffffff34; color: white; height: 30px; padding: 0 11px; border-radius: 9px; font-size: 10px; font-weight: 700; }
+    .mobile-nav { display: none; }
+    .modal-backdrop { position: fixed; inset: 0; z-index: 50; background: #1e18318a; display: none; align-items: center; justify-content: center; padding: 18px; backdrop-filter: blur(4px); }
+    .modal-backdrop.open { display: flex; }
+    .modal { width: min(100%, 480px); max-height: 90vh; overflow: auto; padding: 23px; border-radius: 21px; background: white; box-shadow: 0 25px 80px #1c143b45; }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .modal-head h2 { font-size: 18px; margin: 0; }
+    .close-modal { border: 0; width: 32px; height: 32px; border-radius: 10px; background: #f5f3f8; color: #777181; font-size: 18px; }
+    .field { display: block; margin: 13px 0; }
+    .field span { display: block; font-size: 11px; color: #686273; font-weight: 700; margin-bottom: 7px; }
+    .field input, .field textarea { border: 1px solid var(--line); border-radius: 11px; width: 100%; padding: 11px 12px; outline: 0; resize: vertical; color: var(--ink); background: white; }
+    .field input:focus, .field textarea:focus { border-color: #b6a2f5; box-shadow: 0 0 0 3px #eee9ff; }
+    .field textarea { min-height: 84px; }
+    .upload-box { display: block; border: 1px dashed #cfc6e5; border-radius: 13px; padding: 17px; text-align: center; color: #827a91; background: #faf9fc; font-size: 11px; cursor: pointer; }
+    .upload-box input { display: none; }
+    .upload-preview { max-height: 190px; max-width: 100%; display: none; object-fit: contain; margin: 11px auto 0; border-radius: 10px; }
+    .modal-submit { width: 100%; margin-top: 9px; }
+    .comment-list { max-height: 250px; overflow: auto; }
+    .comment { display: flex; gap: 9px; margin: 12px 0; align-items: flex-start; }
+    .comment .avatar { width: 29px; height: 29px; }
+    .comment p { background: #f7f6fa; padding: 9px 11px; border-radius: 0 12px 12px; margin: 0; font-size: 11px; line-height: 1.5; }
+    .comment strong { display: block; font-size: 10px; margin-bottom: 3px; }
+    .comment-form { display: flex; gap: 8px; margin-top: 15px; }
+    .comment-form input { flex: 1; border: 1px solid var(--line); border-radius: 10px; padding: 0 11px; outline: 0; min-width: 0; }
+    .toast { position: fixed; left: 50%; bottom: 28px; z-index: 70; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: #302747; color: white; padding: 11px 16px; border-radius: 12px; font-size: 12px; box-shadow: 0 8px 25px #21163835; transition: .2s; }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    .empty { color: var(--muted); font-size: 12px; padding: 28px; text-align: center; grid-column: 1/-1; }
+    @media (max-width: 1160px) {
+      .layout { grid-template-columns: 190px minmax(0, 1fr); padding: 24px; gap: 21px; }
+      .right-rail { display: none; }
+      .brand { min-width: 190px; }
+    }
+    @media (max-width: 700px) {
+      .topbar { height: 62px; padding: 0 16px; gap: 12px; }
+      .brand { min-width: auto; font-size: 19px; gap: 8px; }
+      .brand-mark { width: 31px; height: 31px; }
+      .search { margin-left: auto; max-width: none; flex: 0 1 190px; height: 37px; }
+      .search input { padding-left: 35px; font-size: 11px; }
+      .search svg { left: 12px; top: 11px; width: 15px; height: 15px; }
+      .top-actions { gap: 7px; margin-left: 0; }
+      .top-actions .icon-button { width: 35px; height: 35px; border: 0; background: transparent; }
+      .top-actions .avatar { display: none; }
+      .layout { display: block; padding: 16px 14px 88px; }
+      .left-rail, .right-rail { display: none; }
+      .hero { min-height: 227px; padding: 23px 20px; border-radius: 20px; }
+      .hero-copy { max-width: 66%; }
+      .hero h1 { font-size: 23px; }
+      .hero p { font-size: 11px; }
+      .hero-art { width: 36%; height: 157px; right: 12px; bottom: 3px; }
+      .hero-sticker { right: 22%; top: 20px; font-size: 9px; padding: 7px 8px; }
+      .section { margin-top: 25px; }
+      .challenge-strip, .projects, .post-list { gap: 10px; }
+      .community-grid { gap: 8px; }
+      .community-tile { padding: 10px; }
+      .community-tile .community-foot { display: block; }
+      .community-tile .community-join { margin-top: 7px; }
+      .profile-card { padding: 13px; gap: 11px; }
+      .profile-card > .avatar { width: 48px; height: 48px; }
+      .profile-buttons { flex-direction: column; }
+      .challenge-card { padding: 14px; min-height: 126px; }
+      .challenge-card h3 { font-size: 13px; }
+      .challenge-card p { max-width: 75%; line-height: 1.5; }
+      .challenge-emoji { font-size: 27px; right: 11px; }
+      .project-art { height: 90px; }
+      .project-body { padding: 11px; }
+      .project-body h3 { font-size: 11px; }
+      .project-body p { line-height: 1.5; }
+      .project-foot { gap: 5px; font-size: 9px; }
+      .project-foot .button { padding: 0 7px; font-size: 9px; }
+      .post-image-wrap { height: 160px; }
+      .post-content { padding: 11px; }
+      .post-content h3 { font-size: 12px; }
+      .post-actions { gap: 10px; }
+      .post-action { font-size: 9px; }
+      .section-heading h2 { font-size: 15px; }
+      .heading-icon { width: 31px; height: 31px; }
+      .feed-tabs { gap: 4px; }
+      .feed-tab { padding: 0 7px; font-size: 9px; }
+      .mobile-nav { position: fixed; z-index: 30; bottom: 0; left: 0; right: 0; height: 66px; padding: 7px 8px max(7px, env(safe-area-inset-bottom)); display: flex; justify-content: space-around; background: #ffffffed; border-top: 1px solid var(--line); backdrop-filter: blur(14px); }
+      .mobile-link { border: 0; background: transparent; color: #96909e; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 9px; flex: 1; }
+      .mobile-link svg { width: 19px; height: 19px; }
+      .mobile-link.active { color: #7956df; font-weight: 700; }
+    }
+    @media (max-width: 390px) {
+      .brand { font-size: 17px; }
+      .search { flex-basis: 135px; }
+      .top-actions .icon-button:first-child { display: none; }
+      .hero-copy { max-width: 70%; }
+      .hero-art { width: 32%; }
+      .hero h1 { font-size: 21px; }
+      .post-image-wrap { height: 135px; }
+      .post-actions { gap: 7px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="모아 홈">
+        <span class="brand-mark">✳</span> 모아
+      </a>
+      <label class="search">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        <input id="searchInput" type="search" placeholder="작품, 작가, 커뮤니티 검색" aria-label="검색">
+      </label>
+      <div class="top-actions">
+        <button class="icon-button" id="messagesButton" aria-label="메시지"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 8.7 3.9a8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"></path></svg></button>
+        <button class="icon-button" id="noticeButton" aria-label="알림"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><i class="notification-dot"></i></button>
+        <img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="프로필">
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="left-rail">
+        <div class="rail-label">메뉴</div>
+        <nav aria-label="주 메뉴">
+          <a class="nav-link active" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"></path></svg>홈</a>
+          <a class="nav-link" href="#community"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>커뮤니티<span class="nav-count">12</span></a>
+          <a class="nav-link" href="#feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg>아트 피드</a>
+          <a class="nav-link" href="#collab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 10-8 10Z"></path><path d="M8 12h8M12 8v8"></path></svg>협업 프로젝트<span class="nav-count">3</span></a>
+          <a class="nav-link" href="#challenges"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 21h8m-4-4v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0z"></path><path d="M7 6H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4"></path></svg>오늘의 챌린지</a>
+        </nav>
+        <div class="rail-label">내 공간</div>
+        <a class="nav-link" href="#profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"></circle><path d="M5 21a7 7 0 0 1 14 0"></path></svg>내 프로필</a>
+        <a class="nav-link" href="#feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12a2 2 0 0 1 2 2v16l-8-4-8 4V5a2 2 0 0 1 2-2Z"></path></svg>저장한 작품</a>
+        <div class="profile-mini">
+          <img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="">
+          <div><strong>서윤 작가</strong><span>@seoyun.draw</span></div>
+        </div>
+      </aside>
+
+      <main class="main" id="home">
+        <section class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow">오늘도, 함께 그려볼까요? ✨</div>
+            <h1>영감은 나누고,<br>작품은 함께 만들어요.</h1>
+            <p>작은 스케치부터 멋진 협업까지.<br>모아에서 새로운 창작 친구를 만나보세요.</p>
+            <button class="button light" data-modal="post">내 작품 공유하기 <span>↗</span></button>
+          </div>
+          <img class="hero-art" src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=650&q=85" alt="작업실에서 그림을 그리는 모습">
+          <div class="hero-sticker">🎨 이번 주 2,408명이 창작 중</div>
+        </section>
+
+        <section class="section" id="challenges">
+          <div class="section-heading">
+            <span class="heading-icon">✦</span><div><h2>오늘의 크리에이티브 챌린지</h2><p>가볍게 시작해서, 나만의 영감으로 완성해요</p></div>
+            <a class="more" href="#challenges">전체 보기 →</a>
+          </div>
+          <div class="challenge-strip">
+            <article class="challenge-card">
+              <span class="tag">오늘의 랜덤 조합 · 08:42:16 남음</span>
+              <h3>구름 고양이 우체국</h3><p>세 단어로 상상력을 펼쳐봐요</p>
+              <button class="button gradient challenge-action" data-challenge="랜덤 조합 챌린지">도전 시작하기 <span>→</span></button>
+              <span class="challenge-emoji">☁️</span>
+            </article>
+            <article class="challenge-card blue">
+              <span class="tag">이번 주 함께 그리기</span>
+              <h3>내가 꿈꾸는 작은 행성</h3><p>참여한 아티스트 128명</p>
+              <button class="button outline challenge-action" data-challenge="작은 행성 챌린지">작품 구경하기 <span>→</span></button>
+              <span class="challenge-emoji">🪐</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="community">
+          <div class="section-heading">
+            <span class="heading-icon">☻</span><div><h2>취향 맞는 친구들과 함께</h2><p>관심 있는 방에 들어가 이야기와 작업을 나눠보세요</p></div>
+            <a class="more" href="#community">커뮤니티 찾기 →</a>
+          </div>
+          <div class="community-grid">
+            <article class="community-tile"><span class="community-icon">🌷</span><h3>오늘의 일러스트</h3><p>매일 한 장, 서로의 그림에 응원을 보내요.</p><div class="community-foot"><span><i class="live-dot"></i>24명 활동 중</span><button class="community-join" data-community="오늘의 일러스트">참여</button></div></article>
+            <article class="community-tile"><span class="community-icon" style="background:#edf4ff">🪄</span><h3>캐릭터 디자인 연구소</h3><p>캐릭터 설정부터 표정 연습까지 함께해요.</p><div class="community-foot"><span><i class="live-dot"></i>18명 활동 중</span><button class="community-join" data-community="캐릭터 디자인 연구소">참여</button></div></article>
+            <article class="community-tile"><span class="community-icon" style="background:#fff3e8">🌄</span><h3>느긋한 풍경 스케치</h3><p>좋아하는 풍경을 그리고 작업 과정을 나눠요.</p><div class="community-foot"><span><i class="live-dot"></i>9명 활동 중</span><button class="community-join" data-community="느긋한 풍경 스케치">참여</button></div></article>
+          </div>
+        </section>
+
+        <section class="section" id="collab">
+          <div class="section-heading">
+            <span class="heading-icon">✿</span><div><h2>함께 만드는 프로젝트</h2><p>각자의 재능을 모아 하나의 작품으로</p></div>
+            <button class="more project-create" style="border:0;background:none;cursor:pointer">＋ 프로젝트 만들기</button>
+          </div>
+          <div class="projects">
+            <article class="project-card">
+              <div class="project-art"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=700&q=80" alt="환상 도시 프로젝트 미리보기"><span class="project-status">모집 중 · 2자리</span></div>
+              <div class="project-body"><h3>달빛 아래, 우리들의 도시</h3><p>일러스트 · 배경 · 스토리텔링</p><div class="progress-line"><span style="width:58%"></span></div><div class="project-foot"><span>👥 4명 참여 · 진행률 58%</span><button class="button outline project-join" data-project="달빛 아래, 우리들의 도시">함께하기</button></div></div>
+            </article>
+            <article class="project-card">
+              <div class="project-art"><img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=700&q=80" alt="컬러풀한 아트 릴레이 프로젝트"><span class="project-status">아트 릴레이</span></div>
+              <div class="project-body"><h3>이어 그리는 숲속 친구들</h3><p>다음 장면을 그려줄 작가를 찾아요</p><div class="progress-line"><span style="width:76%"></span></div><div class="project-foot"><span>👥 8명 참여 · 3번째 릴레이</span><button class="button outline project-join" data-project="이어 그리는 숲속 친구들">이어 그리기</button></div></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="feed">
+          <div class="section-heading">
+            <span class="heading-icon">▧</span><div><h2>영감 가득 아트 피드</h2><p>오늘, 크리에이터들이 나눈 이야기</p></div>
+            <div class="feed-tabs"><button class="feed-tab selected" data-sort="popular">인기</button><button class="feed-tab" data-sort="newest">최신</button></div>
+          </div>
+          <div class="post-list" id="postList"></div>
+        </section>
+
+        <section class="section" id="profile">
+          <div class="section-heading"><span class="heading-icon">♡</span><div><h2>나의 창작 기록</h2><p>작품과 함께 차곡차곡 쌓이는 나만의 성장</p></div></div>
+          <div class="profile-card">
+            <img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="서윤 작가 프로필">
+            <div class="profile-summary"><h3>서윤 작가 <span style="font-size:10px;color:#8b7ac4;font-weight:500">@seoyun.draw</span></h3><p>그림으로 상상한 장면들을 기록하고 있어요. 함께 그리고 피드백 나누는 걸 좋아합니다 ✨</p><div class="profile-stats"><div><strong id="myArtworkCount">12</strong><span>작품</span></div><div><strong>248</strong><span>팔로워</span></div><div><strong>36</strong><span>함께한 창작</span></div></div></div>
+            <div class="profile-buttons"><button class="button outline profile-edit">프로필 편집</button><button class="button gradient portfolio-button">포트폴리오</button></div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="right-rail">
+        <section class="side-card">
+          <div class="side-title"><h3>지금 활발한 커뮤니티</h3><a href="#community">모두 보기</a></div>
+          <div class="community-list">
+            <div class="community"><span class="community-icon">🌷</span><div class="community-info"><strong>오늘의 일러스트</strong><span><i class="live-dot"></i>24명 활동 중</span></div><button class="community-join" data-community="오늘의 일러스트">참여</button></div>
+            <div class="community"><span class="community-icon" style="background:#edf4ff">🪄</span><div class="community-info"><strong>캐릭터 디자인 연구소</strong><span><i class="live-dot"></i>18명 활동 중</span></div><button class="community-join" data-community="캐릭터 디자인 연구소">참여</button></div>
+            <div class="community"><span class="community-icon" style="background:#fff3e8">🌄</span><div class="community-info"><strong>느긋한 풍경 스케치</strong><span><i class="live-dot"></i>9명 활동 중</span></div><button class="community-join" data-community="느긋한 풍경 스케치">참여</button></div>
+          </div>
+        </section>
+        <section class="side-card">
+          <div class="side-title"><h3>새로운 아티스트</h3><a href="#feed">더 보기</a></div>
+          <div class="artist"><img class="avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt=""><div class="artist-info"><strong>민준의 낙서장</strong><span>캐릭터 · 3D 아트</span></div><button class="follow">팔로우</button></div>
+          <div class="artist"><img class="avatar" src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=100&q=80" alt=""><div class="artist-info"><strong>하루 한 장 유나</strong><span>수채화 · 일러스트</span></div><button class="follow">팔로우</button></div>
+          <div class="artist"><img class="avatar" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&q=80" alt=""><div class="artist-info"><strong>도토리 스튜디오</strong><span>웹툰 · 스토리</span></div><button class="follow">팔로우</button></div>
+        </section>
+        <section class="prompt-card">
+          <span>✦ 오늘의 영감 한 조각</span>
+          <h3>“만약 바다가 하늘에<br>떠 있다면?”</h3>
+          <p>떠오르는 장면을 작은 스케치로 남겨보세요. 완성보다 상상이 먼저예요.</p>
+          <button class="prompt-button">아이디어 저장하기 ♡</button>
+        </section>
+        <section class="side-card">
+          <div class="side-title"><h3>크리에이터 응원하기</h3><a href="#profile">둘러보기</a></div>
+          <p style="font-size:10px;line-height:1.7;color:#888392;margin:0 0 12px">좋아하는 작가를 응원하고, 커미션과 작품 판매 소식을 확인해보세요.</p>
+          <button class="button gradient support-button" style="width:100%;height:35px;font-size:10px">작가 마켓 둘러보기 <span>→</span></button>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" aria-label="모바일 메뉴">
+    <a class="mobile-link active" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"></path></svg>홈</a>
+    <a class="mobile-link" href="#community"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path></svg>커뮤니티</a>
+    <a class="mobile-link" href="#feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg>피드</a>
+    <a class="mobile-link" href="#collab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 10-8 10Z"></path><path d="M8 12h8"></path></svg>협업</a>
+    <a class="mobile-link" href="#profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"></circle><path d="M5 21a7 7 0 0 1 14 0"></path></svg>내 프로필</a>
+  </nav>
+
+  <div class="modal-backdrop" id="postModal" role="dialog" aria-modal="true" aria-labelledby="postModalTitle">
+    <form class="modal" id="postForm">
+      <div class="modal-head"><h2 id="postModalTitle">작품 공유하기</h2><button class="close-modal" type="button" aria-label="닫기">×</button></div>
+      <label class="field"><span>작품 제목</span><input name="title" required maxlength="70" placeholder="작품에 어울리는 제목을 붙여주세요"></label>
+      <label class="field"><span>작품 이야기</span><textarea name="description" maxlength="300" placeholder="어떤 생각과 과정으로 만들었나요?"></textarea></label>
+      <div class="field"><span>이미지</span><label class="upload-box">이미지를 선택하거나 여기에 놓아주세요<input id="imageFile" type="file" accept="image/*"><img class="upload-preview" id="uploadPreview" alt="업로드 미리보기"></label></div>
+      <label class="field"><span>태그</span><input name="tags" placeholder="예: 일러스트, 창작, 오늘의작품"></label>
+      <button class="button gradient modal-submit" type="submit">피드에 공유하기</button>
+    </form>
+  </div>
+  <div class="modal-backdrop" id="commentModal" role="dialog" aria-modal="true" aria-labelledby="commentTitle">
+    <div class="modal">
+      <div class="modal-head"><h2 id="commentTitle">작품 이야기</h2><button class="close-modal" type="button" aria-label="닫기">×</button></div>
+      <div class="comment-list" id="commentList"></div>
+      <form class="comment-form" id="commentForm"><input name="comment" required maxlength="240" placeholder="따뜻한 피드백을 남겨보세요"><button class="button gradient" type="submit" style="height:38px;padding:0 12px">등록</button></form>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+    <form class="modal" id="projectForm">
+      <div class="modal-head"><h2 id="projectModalTitle">협업 프로젝트 만들기</h2><button class="close-modal" type="button" aria-label="닫기">×</button></div>
+      <label class="field"><span>프로젝트 이름</span><input name="name" required maxlength="60" placeholder="예: 우리들의 작은 우주"></label>
+      <label class="field"><span>함께하고 싶은 역할</span><input name="roles" required maxlength="80" placeholder="예: 배경, 채색, 스토리"></label>
+      <label class="field"><span>프로젝트 소개</span><textarea name="description" required maxlength="240" placeholder="어떤 작품을 함께 만들고 싶나요?"></textarea></label>
+      <button class="button gradient modal-submit" type="submit">모집 시작하기</button>
+    </form>
+  </div>
+  <div class="modal-backdrop" id="chatModal" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+    <div class="modal">
+      <div class="modal-head"><div><h2 id="chatTitle">커뮤니티 채팅</h2><span style="font-size:10px;color:#928c9b">텍스트 채팅 데모 · 메시지는 이 기기에 저장돼요</span></div><button class="close-modal" type="button" aria-label="닫기">×</button></div>
+      <div class="comment-list" id="chatList"></div>
+      <form class="comment-form" id="chatForm"><input name="message" required maxlength="240" placeholder="함께 나눌 이야기를 입력하세요"><button class="button gradient" type="submit" style="height:38px;padding:0 12px">전송</button></form>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const artworkSeed = [
+      { id: "seed-1", author: "유리의 작은정원", handle: "@yuri_draws", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=100&q=80", image: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=850&q=85", title: "초여름을 모으는 아이", description: "햇살이 잘 드는 창가에서 색연필로 천천히 그려봤어요. 여러분의 여름은 어떤 색인가요?", tags: ["일러스트", "색연필"], likes: 128, comments: ["색감이 너무 포근해요!", "창문 너머 풍경도 궁금해요 🌿"], created: 3 },
+      { id: "seed-2", author: "민준의 낙서장", handle: "@minjun.art", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80", image: "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=850&q=85", title: "파란 행성의 오후", description: "작은 세계에도 분명 나름의 오후가 있겠지, 하고 상상하면서.", tags: ["상상화", "디지털아트"], likes: 96, comments: ["이 행성에 놀러 가고 싶어요"], created: 5 },
+      { id: "seed-3", author: "하루 한 장 유나", handle: "@yuna.paper", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&q=80", image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=850&q=85", title: "작업실의 오후 기록", description: "좋아하는 것들 사이에서 보내는 시간. 오늘은 스케치를 세 장이나 했어요!", tags: ["작업과정", "드로잉"], likes: 74, comments: [], created: 8 },
+      { id: "seed-4", author: "도토리 스튜디오", handle: "@acorn.story", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&q=80", image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=850&q=85", title: "숲속 친구들의 비밀 회의", description: "협업 프로젝트의 캐릭터 시안이에요. 다음엔 어떤 친구가 합류할까요?", tags: ["캐릭터", "협업"], likes: 213, comments: ["다람쥐 회장님 너무 귀여워요!"], created: 12 }
+    ];
+    const readStore = (key, fallback) => {
+      try { const value = JSON.parse(localStorage.getItem(key)); return value ?? fallback; }
+      catch { return fallback; }
+    };
+    const state = {
+      posts: readStore("moa.posts", artworkSeed),
+      liked: readStore("moa.liked", []),
+      saved: readStore("moa.saved", []),
+      joined: readStore("moa.joined", []),
+      projects: readStore("moa.projects", []),
+      createdProjects: readStore("moa.createdProjects", []),
+      followed: readStore("moa.followed", []),
+      challenge: readStore("moa.challenge", []),
+      chats: readStore("moa.chats", {}),
+      activePost: null,
+      activeCommunity: null,
+      sort: "popular"
+    };
+    const persist = () => {
+      try {
+        for (const key of ["posts", "liked", "saved", "joined", "projects", "createdProjects", "followed", "challenge", "chats"]) {
+          localStorage.setItem(`moa.${key}`, JSON.stringify(state[key]));
+        }
+      } catch {
+        toast("브라우저 저장 공간이 부족해요. 일부 변경 사항이 저장되지 않을 수 있어요.");
+      }
+    };
+    const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+    const toast = message => {
+      const el = document.getElementById("toast");
+      el.textContent = message;
+      el.classList.add("show");
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => el.classList.remove("show"), 2400);
+    };
+    const renderPosts = () => {
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+      const posts = [...state.posts].filter(post => !query || [post.title, post.author, post.description, ...(post.tags || [])].join(" ").toLowerCase().includes(query));
+      if (state.sort === "popular") posts.sort((a, b) => b.likes - a.likes);
+      else posts.sort((a, b) => a.created - b.created);
+      const container = document.getElementById("postList");
+      if (!posts.length) {
+        container.innerHTML = '<div class="empty">검색 결과가 없어요. 다른 키워드로 찾아보세요.</div>';
+        return;
+      }
+      container.innerHTML = posts.map(post => {
+        const liked = state.liked.includes(post.id);
+        const saved = state.saved.includes(post.id);
+        const tags = (post.tags || []).map(tag => `#${escapeHTML(tag)}`).join(" ");
+        return `<article class="post-card" data-post="${escapeHTML(post.id)}">
+          <div class="post-image-wrap"><img class="post-image" src="${escapeHTML(post.image)}" alt="${escapeHTML(post.title)}"><button class="post-save ${saved ? "saved" : ""}" data-action="save" aria-label="작품 저장">${saved ? "▣" : "♧"}</button></div>
+          <div class="post-content"><div class="post-author"><img class="avatar" src="${escapeHTML(post.avatar)}" alt=""><div><strong>${escapeHTML(post.author)}</strong><span>${escapeHTML(post.handle)} · ${post.created === 0 ? "방금 전" : `${post.created}시간 전`}</span></div></div>
+          <h3>${escapeHTML(post.title)}</h3><p class="description">${escapeHTML(post.description || "")}</p><div class="post-tags">${tags}</div>
+          <div class="post-actions"><button class="post-action ${liked ? "liked" : ""}" data-action="like"><svg viewBox="0 0 24 24" fill="${liked ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"></path></svg>${post.likes}</button><button class="post-action" data-action="comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 8.7 3.9a8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"></path></svg>${(post.comments || []).length}</button><button class="post-action" data-action="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V3m0 0L7 8m5-5 5 5"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path></svg>공유</button></div>
+          </div></article>`;
+      }).join("");
+      const count = document.getElementById("myArtworkCount");
+      if (count) count.textContent = 12 + state.posts.filter(post => post.handle === "@seoyun.draw").length;
+    };
+    const renderCreatedProjects = () => {
+      const container = document.querySelector(".projects");
+      container.querySelectorAll("[data-created-project]").forEach(card => card.remove());
+      state.createdProjects.forEach(project => {
+        const card = document.createElement("article");
+        card.className = "project-card";
+        card.dataset.createdProject = project.id;
+        card.innerHTML = `<div class="project-art"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=700&q=80" alt="새 프로젝트 미리보기"><span class="project-status">모집 중 · 새 프로젝트</span></div><div class="project-body"><h3>${escapeHTML(project.name)}</h3><p>${escapeHTML(project.roles)}</p><div class="progress-line"><span style="width:10%"></span></div><div class="project-foot"><span>${escapeHTML(project.description)}</span><button class="button outline project-join" data-project="${escapeHTML(project.name)}">함께하기</button></div></div>`;
+        container.append(card);
+      });
+      document.querySelectorAll(".project-join").forEach(button => {
+        const joined = state.projects.includes(button.dataset.project);
+        button.textContent = joined ? "참여 중 ✓" : button.dataset.project.includes("이어 그리는") ? "이어 그리기" : "함께하기";
+        button.classList.toggle("joined", joined);
+      });
+    };
+    const modal = (id, open) => document.getElementById(id).classList.toggle("open", open);
+    document.querySelectorAll('[data-modal="post"]').forEach(button => button.addEventListener("click", () => modal("postModal", true)));
+    document.querySelectorAll(".close-modal").forEach(button => button.addEventListener("click", () => button.closest(".modal-backdrop").classList.remove("open")));
+    document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.addEventListener("click", event => {
+      if (event.target === backdrop) backdrop.classList.remove("open");
+    }));
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") document.querySelectorAll(".modal-backdrop.open").forEach(el => el.classList.remove("open"));
+    });
+    document.getElementById("imageFile").addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const source = new Image();
+        source.onload = () => {
+          const scale = Math.min(1, 1200 / Math.max(source.width, source.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(source.width * scale));
+          canvas.height = Math.max(1, Math.round(source.height * scale));
+          canvas.getContext("2d").drawImage(source, 0, 0, canvas.width, canvas.height);
+          const preview = document.getElementById("uploadPreview");
+          preview.src = canvas.toDataURL("image/jpeg", .82);
+          preview.style.display = "block";
+        };
+        source.onerror = () => toast("이미지를 불러오지 못했어요. 다른 파일을 선택해주세요.");
+        source.src = reader.result;
+      };
+      reader.onerror = () => toast("이미지를 읽지 못했어요. 다시 선택해주세요.");
+      reader.readAsDataURL(file);
+    });
+    document.getElementById("postForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const preview = document.getElementById("uploadPreview");
+      const image = preview.src && preview.style.display !== "none" ? preview.src : "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=850&q=85";
+      state.posts.unshift({
+        id: `post-${Date.now()}`, author: "서윤 작가", handle: "@seoyun.draw",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
+        image, title: data.get("title"), description: data.get("description"),
+        tags: String(data.get("tags") || "").split(/[,\s#]+/).filter(Boolean).slice(0, 5), likes: 0, comments: [], created: 0
+      });
+      persist(); renderPosts(); form.reset(); preview.src = ""; preview.style.display = "none"; modal("postModal", false);
+      document.getElementById("feed").scrollIntoView({ behavior: "smooth" });
+      toast("작품이 피드에 공유되었어요 ✨");
+    });
+    document.getElementById("postList").addEventListener("click", event => {
+      const button = event.target.closest("[data-action]");
+      if (!button) return;
+      const card = button.closest(".post-card");
+      const post = state.posts.find(item => item.id === card.dataset.post);
+      if (!post) return;
+      const action = button.dataset.action;
+      if (action === "like") {
+        if (state.liked.includes(post.id)) { state.liked = state.liked.filter(id => id !== post.id); post.likes = Math.max(0, post.likes - 1); }
+        else { state.liked.push(post.id); post.likes += 1; }
+        persist(); renderPosts();
+      } else if (action === "save") {
+        state.saved = state.saved.includes(post.id) ? state.saved.filter(id => id !== post.id) : [...state.saved, post.id];
+        persist(); renderPosts(); toast(state.saved.includes(post.id) ? "작품을 저장했어요" : "저장을 취소했어요");
+      } else if (action === "comment") {
+        state.activePost = post.id; renderComments(post); modal("commentModal", true);
+      } else if (action === "share") {
+        const share = { title: post.title, text: `${post.title} — 모아`, url: location.href };
+        if (navigator.share) navigator.share(share).catch(() => {});
+        else if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(() => toast("링크를 복사했어요"));
+        else toast("작품을 함께 감상해보세요!");
+      }
+    });
+    function renderComments(post) {
+      document.getElementById("commentTitle").textContent = post.title;
+      const comments = post.comments || [];
+      document.getElementById("commentList").innerHTML = comments.length ? comments.map(comment => `<div class="comment"><img class="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt=""><p><strong>${escapeHTML(comment.author || "모아 작가")}</strong>${escapeHTML(comment.text || comment)}</p></div>`).join("") : '<div class="empty">첫 번째 응원의 말을 남겨보세요!</div>';
+    }
+    document.getElementById("commentForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const post = state.posts.find(item => item.id === state.activePost);
+      const input = event.currentTarget.elements.comment;
+      if (!post || !input.value.trim()) return;
+      post.comments = [...(post.comments || []), { author: "서윤 작가", text: input.value.trim() }];
+      persist(); renderComments(post); renderPosts(); input.value = "";
+      document.getElementById("commentList").scrollTop = document.getElementById("commentList").scrollHeight;
+    });
+    document.querySelector(".project-create").addEventListener("click", () => modal("projectModal", true));
+    document.getElementById("projectForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      state.createdProjects.unshift({
+        id: `project-${Date.now()}`, name: String(data.get("name")).trim(),
+        roles: String(data.get("roles")).trim(), description: String(data.get("description")).trim()
+      });
+      persist(); renderCreatedProjects(); event.currentTarget.reset(); modal("projectModal", false);
+      toast("프로젝트를 만들고 참여자를 모집하기 시작했어요!");
+    });
+    const renderChat = community => {
+      document.getElementById("chatTitle").textContent = community;
+      const messages = state.chats[community] || [];
+      document.getElementById("chatList").innerHTML = messages.length
+        ? messages.map(message => `<div class="comment"><img class="avatar" src="${message.author === "서윤 작가" ? "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" : "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80"}" alt=""><p><strong>${escapeHTML(message.author)}</strong>${escapeHTML(message.text)}</p></div>`).join("")
+        : '<div class="empty">아직 대화가 없어요. 먼저 인사해보세요 👋</div>';
+    };
+    const updateCommunityButtons = () => document.querySelectorAll(".community-join").forEach(button => {
+      const joined = state.joined.includes(button.dataset.community);
+      button.textContent = joined ? "참여 중" : "참여";
+      button.classList.toggle("joined", joined);
+    });
+    document.querySelectorAll(".community-join").forEach(button => {
+      button.addEventListener("click", () => {
+        const community = button.dataset.community;
+        if (state.joined.includes(community)) {
+          state.activeCommunity = community; renderChat(community); modal("chatModal", true);
+        } else {
+          state.joined.push(community);
+          persist(); updateCommunityButtons(); toast(`${community}에 참여했어요. '참여 중'을 눌러 대화를 시작해보세요.`);
+        }
+      });
+    });
+    updateCommunityButtons();
+    document.querySelector(".projects").addEventListener("click", event => {
+      const button = event.target.closest(".project-join");
+      if (!button) return;
+      const project = button.dataset.project;
+      state.projects = state.projects.includes(project) ? state.projects.filter(item => item !== project) : [...state.projects, project];
+      persist(); renderCreatedProjects(); toast(state.projects.includes(project) ? `${project}에 참여 신청했어요` : "참여 신청을 취소했어요");
+    });
+    document.getElementById("chatForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const input = event.currentTarget.elements.message;
+      const text = input.value.trim();
+      if (!state.activeCommunity || !text) return;
+      const messages = state.chats[state.activeCommunity] || [];
+      state.chats[state.activeCommunity] = [...messages, { author: "서윤 작가", text }];
+      persist(); renderChat(state.activeCommunity); input.value = "";
+      const list = document.getElementById("chatList");
+      list.scrollTop = list.scrollHeight;
+    });
+    document.querySelectorAll(".challenge-action").forEach(button => button.addEventListener("click", () => {
+      const challenge = button.dataset.challenge;
+      if (!state.challenge.includes(challenge)) state.challenge.push(challenge);
+      persist(); toast(`${challenge}에 도전해볼까요? 작품을 공유해보세요!`);
+      document.querySelector('[data-modal="post"]').click();
+    }));
+    document.querySelectorAll(".follow").forEach(button => {
+      const artist = button.closest(".artist").querySelector("strong").textContent;
+      const update = () => { const following = state.followed.includes(artist); button.textContent = following ? "팔로잉" : "팔로우"; button.classList.toggle("following", following); };
+      update();
+      button.addEventListener("click", () => {
+        state.followed = state.followed.includes(artist) ? state.followed.filter(item => item !== artist) : [...state.followed, artist];
+        persist(); update(); toast(state.followed.includes(artist) ? `${artist} 작가를 팔로우했어요` : "팔로우를 취소했어요");
+      });
+    });
+    document.querySelectorAll(".feed-tab").forEach(button => button.addEventListener("click", () => {
+      state.sort = button.dataset.sort;
+      document.querySelectorAll(".feed-tab").forEach(tab => tab.classList.toggle("selected", tab === button));
+      renderPosts();
+    }));
+    document.getElementById("searchInput").addEventListener("input", renderPosts);
+    document.getElementById("noticeButton").addEventListener("click", () => toast("새로운 알림이 없어요. 창작에 집중해볼까요?"));
+    document.getElementById("messagesButton").addEventListener("click", () => toast("메시지 기능은 데모 화면이에요."));
+    document.querySelector(".prompt-button").addEventListener("click", event => {
+      event.currentTarget.textContent = "저장했어요 ✓"; toast("오늘의 영감을 저장했어요");
+    });
+    document.querySelector(".support-button").addEventListener("click", () => toast("작가 마켓은 준비 중인 데모 기능이에요."));
+    const updateNavigation = () => {
+      const hash = location.hash || "#home";
+      document.querySelectorAll(".nav-link, .mobile-link").forEach(link => link.classList.toggle("active", link.getAttribute("href") === hash || (hash === "#profile" && link.getAttribute("href") === "#profile")));
+    };
+    window.addEventListener("hashchange", updateNavigation);
+    updateNavigation();
+    renderCreatedProjects();
+    renderPosts();
+  </script>
+</body>
+</html>
